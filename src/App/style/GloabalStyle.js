@@ -1,6 +1,17 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
+/* 모든 InfoWindow 화살표를 숨김 */
+/* 모든 화살표와 관련된 요소 숨기기 */
+div[style*="border-style: solid"],
+div[style*="border-width: 24px 10px 0px"],
+div[style*="border-width: 10px 10px 0px"] {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  border: none !important;
+}
 html,
 body,
 div,

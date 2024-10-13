@@ -1,11 +1,16 @@
-import React, { useEffect } from "react";
-import { NaverMap, Marker, Container as MapDiv } from "react-naver-maps";
+import React, { useEffect, useRef, useCallback } from "react";
+import {
+  NaverMap,
+  Marker,
+  Container as MapDiv,
+  useMap,
+} from "react-naver-maps";
 import Style from "./style";
 import { useMapOptions } from "../../model/useMapOption";
 import Markers from "../Markers/Markers";
+
 const MyNaverMap = () => {
   const [option, setOptionEvent] = useMapOptions();
-
   useEffect(() => {
     setOptionEvent({
       minZoom: 10,
@@ -22,10 +27,7 @@ const MyNaverMap = () => {
           minZoom={option.minZoom}
           maxZoom={option.maxZoom}
           zoom={13}>
-          <Marker
-            position={{ lat: 37.450284, lng: 126.653478 }}
-            animation={2} // 애니메이션 설정 (2: BOUNCE)
-          />
+          <Marker position={{ lat: 37.450284, lng: 126.653478 }} />
           <Markers />
         </NaverMap>
       </MapDiv>

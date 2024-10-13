@@ -1,31 +1,38 @@
-import { Marker } from "react-naver-maps";
+import React, { useEffect } from "react";
+import { Marker, useMap } from "react-naver-maps";
 import useBusStop from "../../model/useBusStop";
-import { useEffect } from "react";
-import { busStop, nodeLocation } from "../../../../shared/BusLocationData";
 import useNode from "../../model/useNodeInit";
+import { busStop, nodeLocation } from "../../../../shared/BusLocationData";
 import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
+import handleMarkerClick from "../../model/markerClick";
+
 const Markers = () => {
   const [busStops, setBusAdd, setBusDelete] = useBusStop();
   const [nodeData, setNodeAdd, setNodeDelete] = useNode();
   const [check] = useCheckAtom();
+
+  const map = useMap(); // 지도 객체 가져오기
+
+  // 마커 클릭 핸들러: 네이버 API 사용하여 InfoWindow 생성
+
   useEffect(() => {
-    if (check.node) {
-      setNodeAdd(nodeLocation);
-    } else {
-      setNodeDelete(); // 함수 호출
-    }
+    if (check.node) setNodeAdd(nodeLocation);
+    else setNodeDelete();
   }, [check.node]);
+
   useEffect(() => {
-    if (check.bus) {
-      setBusAdd(busStop);
-    } else {
-      setBusDelete(); // 함수 호출
-    }
+    if (check.bus) setBusAdd(busStop);
+    else setBusDelete();
   }, [check.bus]);
+
   return (
     <>
-      {busStops.map((stop, index) => (
-        <Marker key={index} position={stop.busPoint} />
+      {busStops.map((stopData, index) => (
+        <Marker
+          key={index}
+          position={stopData.busPoint}
+          onClick={() => handleMarkerClick(stopData, map)}
+        />
       ))}
       {nodeData.map((data, index) => (
         <Marker key={index} position={data} />
