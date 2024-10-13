@@ -10,7 +10,7 @@ import {
   ContainerBox,
   Icon,
 } from "./style.js";
-import BlackSearchIcon from "../../../search/assets/search_icon.js";
+import BlackSearchIcon from "../../asset/search_black.js";
 const SearchContainer = () => {
   return (
     <ContainerBox>

@@ -1,8 +1,8 @@
 import { Container, Box, Icon, IconWrap } from "./style";
 
-const HoverIcon = ({ resource }) => {
+const HoverIcon = ({ resource, onClick }) => {
   return (
-    <Container>
+    <Container onClick={onClick}>
       <Box>
         <IconWrap>
           <Icon as={resource} />

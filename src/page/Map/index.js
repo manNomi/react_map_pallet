@@ -1,4 +1,4 @@
-import MyNaverMap from "./ui/MyNaverMap";
+import MyNaverMap from "./ui/NaverMap/MyNaverMap";
 import { NavermapsProvider } from "react-naver-maps";
 
 const Map = () => (

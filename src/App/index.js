@@ -1,6 +1,6 @@
 import { PC, Mobile } from "./model/useMediaQuery.js";
 import { BrowserRouter } from "react-router-dom";
-import SearchContainer from "./ui/header";
+import Aside from "./ui/aside";
 import GlobalStyle from "./style/GloabalStyle.js";
 import Page from "../page/index.js";
 const App = () => {
@@ -8,11 +8,11 @@ const App = () => {
     <BrowserRouter>
       <GlobalStyle />
       <PC>
-        <SearchContainer />
+        <Aside />
         <Page />
       </PC>
       <Mobile>
-        <SearchContainer />
+        <Aside />
         <Page />
       </Mobile>
     </BrowserRouter>
