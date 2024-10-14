@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Marker, useMap } from "react-naver-maps";
 import useBusStop from "../../model/useBusStop";
 import useNode from "../../model/useNodeInit";
-import { busStop, nodeLocation } from "../../../../shared/BusLocationData";
+import { busStop, nodeLocation } from "../../../../entities/BusLocationData";
 import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
 import handleMarkerClick from "../../model/markerClick";
 
@@ -35,7 +35,7 @@ const Markers = () => {
         />
       ))}
       {nodeData.map((data, index) => (
-        <Marker key={index} position={data} />
+        <Marker key={index} position={data.position} />
       ))}
     </>
   );

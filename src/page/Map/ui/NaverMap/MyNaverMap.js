@@ -8,6 +8,7 @@ import {
 import Style from "./style";
 import { useMapOptions } from "../../model/useMapOption";
 import Markers from "../Markers/Markers";
+import BusMarkers from "../Bus/BusMarkers";
 
 const MyNaverMap = () => {
   const [option, setOptionEvent] = useMapOptions();
@@ -21,13 +22,14 @@ const MyNaverMap = () => {
 
   return (
     <Style.Container>
-      <MapDiv style={{ width: "100%", height: "600px" }}>
+      <MapDiv style={{ width: "100%", height: "800px" }}>
         <NaverMap
           center={option.center}
           minZoom={option.minZoom}
           maxZoom={option.maxZoom}
           zoom={13}>
           <Marker position={{ lat: 37.450284, lng: 126.653478 }} />
+          <BusMarkers />
           <Markers />
         </NaverMap>
       </MapDiv>
