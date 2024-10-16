@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { nodeLocation } from "../../../entities/BusLocationData";
 
 const useBus = () => {
@@ -13,28 +13,28 @@ const useBus = () => {
   };
 
   const moveBusEvent = () => {
-    const speed = 10; // 고정된 속도 (m/s)
+    const speed = 0.1; // 고정된 속도 (m/s)
     const intervalId = setInterval(() => {
       setBus((prevBus) =>
         prevBus.map((busLocation) => {
           const nextNode = nodeLocation.find(
-            (node) => node.node === busLocation.node + 1
+            (node) => node.lastNode === busLocation.lastNode + 1
           );
 
-          if (!nextNode || !nextNode.position) {
-            console.warn(`No next node found for node ${busLocation.node}`);
-            return busLocation; // 다음 노드가 없으면 현재 위치 유지
+          if (!nextNode) {
+            busLocation = nodeLocation[0];
+            return busLocation; // 다음 노드가 없으면 처음으로 돌아옴
           }
 
           const distance = getDistanceInMeters(
-            nextNode.position.lat,
-            nextNode.position.lng,
-            busLocation.position.lat,
-            busLocation.position.lng
+            nextNode.lat,
+            nextNode.lng,
+            busLocation.lat,
+            busLocation.lng
           );
 
-          const x = nextNode.position.lat - busLocation.position.lat;
-          const y = nextNode.position.lng - busLocation.position.lng;
+          const x = nextNode.lat - busLocation.lat;
+          const y = nextNode.lng - busLocation.lng;
 
           // 거리와 속도를 기반으로 이동해야 하는 시간 (초 단위) 계산
           const timeToNextNode = distance / speed; // s
@@ -42,24 +42,24 @@ const useBus = () => {
           const step = frameRate / (timeToNextNode * 1000); // 이동 비율 계산
 
           // 새로운 위치 계산
-          const xLocation = busLocation.position.lat + x * step;
-          const yLocation = busLocation.position.lng + y * step;
+          const xLocation = busLocation.lat + x * step;
+          const yLocation = busLocation.lng + y * step;
 
-          let newNode = busLocation.node;
+          let newNode = busLocation.lastNode;
 
           // 임계값 이하일 경우 다음 노드로 이동
           if (distance < 5) {
-            newNode = nextNode.node;
+            newNode = nextNode.lastNode;
+            // console.log("현재노드 바뀜", newNode);
           }
-
           return {
-            node: newNode,
-            position: { lat: xLocation, lng: yLocation },
+            lastNode: newNode,
+            lat: xLocation,
+            lng: yLocation,
           };
         })
       );
-    }, 10); // 10ms마다 위치를 업데이트합니다.
-
+    }, 100); // 10ms마다 위치를 업데이트합니다.
     return () => clearInterval(intervalId); // 컴포넌트가 언마운트될 때 타이머를 정리합니다.
   };
 

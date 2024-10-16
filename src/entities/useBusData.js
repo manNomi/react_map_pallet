@@ -1,41 +1,52 @@
-import { useState } from "react";
-import React from "react";
-// 아래 양식으로 교체요함
-// { 번호판 , node: 1, position: { lat: 37.45707758, lng: 126.6712355 } },
-// 맞지 ?
-const getBusData = () => {
-  const nodes = [
-    { node: 15, position: { lat: 37.46404699, lng: 126.6803543 } },
-    { node: 1, position: { lat: 37.45707758, lng: 126.6712355 } },
-    { node: 3, position: { lat: 37.45259879, lng: 126.6454402 } },
-    { node: 5, position: { lat: 37.46005146, lng: 126.6723939 } },
-    { node: 44, position: { lat: 37.44780524, lng: 126.6462968 } },
-    { node: 46, position: { lat: 37.45178038, lng: 126.6488714 } },
-    { node: 2, position: { lat: 37.44955508, lng: 126.6632096 } },
-    { node: 31, position: { lat: 37.45871559, lng: 126.6743077 } },
-    { node: 13, position: { lat: 37.4522631, lng: 126.6675775 } },
-    { node: 41, position: { lat: 37.45290046, lng: 126.6447682 } },
-  ];
-  return nodes;
+import { useEffect, useState } from "react";
+
+const getBusData = async () => {
+  try {
+    const response = await fetch("http://43.202.84.174:8500/busLife", {});
+    const status = response.status;
+
+    // 상태 코드에 따른 처리
+    if (!response.ok) {
+      switch (status) {
+        case 400:
+          alert("입력 값 오류");
+          break;
+        case 409:
+          alert("중복임");
+          break;
+        default:
+          alert("서버 오류 발생");
+      }
+      return; // 에러 발생 시 이후 처리 중단
+    }
+
+    // 응답이 성공한 경우만 JSON 처리
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.log("네트워크 또는 서버 오류:", error);
+  }
 };
 
 const useBusData = () => {
-  const [busData, setBusData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [busData, setBusData] = useState({});
   const [error, setError] = useState(false);
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const busData = getBusData();
-        setBusData(busData);
-        setLoading(false);
-      } catch (error) {
-        setError(true);
-      }
-    };
-
+  const fetchData = async () => {
+    try {
+      const busData = await getBusData();
+      setBusData(busData);
+    } catch (error) {
+      setError(true);
+    }
+  };
+  useEffect(() => {
     fetchData();
+    const initInterval = setInterval(() => {
+      fetchData();
+    }, 10000);
+    return () => clearInterval(initInterval);
   }, []);
-  return [busData, loading, error];
+
+  return [busData, error];
 };
 export default useBusData;
