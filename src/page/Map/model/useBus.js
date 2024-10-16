@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { nodeLocation } from "../../../entities/BusLocationData";
 
 const useBus = () => {
@@ -13,7 +13,9 @@ const useBus = () => {
   };
 
   const moveBusEvent = () => {
-    const speed = 0.1; // 고정된 속도 (m/s)
+    console.log("moveBusEvent started");
+
+    const speed = 100; // 고정된 속도 (m/s)
     const intervalId = setInterval(() => {
       setBus((prevBus) =>
         prevBus.map((busLocation) => {
@@ -59,10 +61,9 @@ const useBus = () => {
           };
         })
       );
-    }, 100); // 10ms마다 위치를 업데이트합니다.
+    }, 10); // 10ms마다 위치를 업데이트합니다.
     return () => clearInterval(intervalId); // 컴포넌트가 언마운트될 때 타이머를 정리합니다.
   };
-
   return [bus, setBusAdd, resetBusData, moveBusEvent];
 };
 
