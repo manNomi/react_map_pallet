@@ -40,18 +40,10 @@ const useBusData = () => {
     }
   };
   useEffect(() => {
+    fetchData();
     const initInterval = setInterval(() => {
-      // fetchData();
-      setBusData({
-        data: [
-          {
-            lastNode: 0,
-            lat: 37.4478052441598,
-            lng: 126.646296789041,
-          },
-        ],
-      });
-    }, 5000);
+      fetchData();
+    }, 1000);
     return () => clearInterval(initInterval);
   }, []);
 

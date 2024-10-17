@@ -5,23 +5,37 @@ import useTestBusData from "../../../../entities/useTestBusData";
 import busIcon from "../../assets/bus.svg";
 import useBusData from "../../../../entities/useBusData";
 const BusMarkers = () => {
+  // 버스 테스트 코드
+  // const [busTestData, loadingTest, errorTest] = useTestBusData();
   // 버스 좌표 상태
   const [bus, setBus, resetBus, moveBusEvent] = useBus();
-  const [busTestData, loadingTest, errorTest] = useTestBusData();
 
   // 버스 데이터 통신
   const [busData, error] = useBusData();
 
   // busData가 변경되었을 때 처리 (lastNode가 다르면 업데이트)
   useEffect(() => {
+    console.log(busData);
     if (busData && busData.data) {
       setBus((prevBus) => {
+        // 처음으로 데이터를 불러오면 그대로 저장
+        moveBusEvent(); // 버스 좌표 주기적으로 업데이트
+
         if (prevBus.length === 0) {
-          return busData.data; // 처음 값은 그대로 설정
+          return busData.data;
         }
+
+        // 처음이 아닐때 데이터 저장
         return prevBus.map((busLocation, index) => {
-          // bus의 lastNode와 busData의 lastNode가 다른 경우에만 업데이트
-          if (busLocation.lastNode !== busData.data[index].lastNode) {
+          if (!busData.data[index]) {
+            return busLocation; // 안전한 반환
+          }
+          // 버스의 원래 노드
+          const prevLastNode = parseInt(busLocation.lastNode);
+          //
+          const newLastNode = parseInt(busData.data[index].lastNode);
+
+          if (prevLastNode !== newLastNode) {
             return {
               ...busLocation,
               lat: busData.data[index].lat,
@@ -36,29 +50,16 @@ const BusMarkers = () => {
     }
   }, [busData]);
 
-  // moveBusEvent는 busData 변경 시마다 실행
-  useEffect(() => {
-    const stopMoving = moveBusEvent(); // 버스 좌표 주기적으로 업데이트
-    return () => {
-      stopMoving(); // 언마운트 또는 busData 변경 시 타이머 정리
-    };
-  }, [busData]);
-
   return (
     <>
-      {/* {loadingTest ? (
-        <div>로딩중</div>
-      ) : */}
       {error ? (
         <div>오류</div>
       ) : (
         bus.map((busLocation, index) => {
           // 유효성 검사: position이 없을 경우 예외 처리
           if (!busLocation || !busLocation.lat || !busLocation.lng) {
-            console.log(`Invalid bus location at index ${index}`, busLocation);
             return null; // 유효하지 않은 경우 렌더링하지 않음
           }
-          console.log(busLocation.lat, busLocation.lng);
           return (
             <Marker
               key={index}

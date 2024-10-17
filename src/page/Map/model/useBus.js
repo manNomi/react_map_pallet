@@ -13,21 +13,21 @@ const useBus = () => {
   };
 
   const moveBusEvent = () => {
-    console.log("moveBusEvent started");
-
-    const speed = 100; // 고정된 속도 (m/s)
+    const speed = 10; // 고정된 속도 (m/s)
     const intervalId = setInterval(() => {
       setBus((prevBus) =>
         prevBus.map((busLocation) => {
           const nextNode = nodeLocation.find(
-            (node) => node.lastNode === busLocation.lastNode + 1
+            (node) => node.lastNode === parseInt(busLocation.lastNode) + 1
           );
 
+          // 마지막 노드가 없을 경우, 처음으로 돌아옴
           if (!nextNode) {
             busLocation = nodeLocation[0];
-            return busLocation; // 다음 노드가 없으면 처음으로 돌아옴
+            return busLocation;
           }
 
+          // 현재 위치와 다음 노드 사이의 거리 계산
           const distance = getDistanceInMeters(
             nextNode.lat,
             nextNode.lng,
@@ -35,33 +35,41 @@ const useBus = () => {
             busLocation.lng
           );
 
-          const x = nextNode.lat - busLocation.lat;
-          const y = nextNode.lng - busLocation.lng;
-
-          // 거리와 속도를 기반으로 이동해야 하는 시간 (초 단위) 계산
-          const timeToNextNode = distance / speed; // s
-          const frameRate = 10; // 10ms마다 업데이트
-          const step = frameRate / (timeToNextNode * 1000); // 이동 비율 계산
-
-          // 새로운 위치 계산
-          const xLocation = busLocation.lat + x * step;
-          const yLocation = busLocation.lng + y * step;
-
+          // 새로운 위치 초기화
+          let xLocation = busLocation.lat;
+          let yLocation = busLocation.lng;
           let newNode = busLocation.lastNode;
 
-          // 임계값 이하일 경우 다음 노드로 이동
+          // 임계값 이하일 경우 해당 위치에서 멈추고 다음 노드로 이동하지 않음
           if (distance < 5) {
-            newNode = nextNode.lastNode;
-            // console.log("현재노드 바뀜", newNode);
+            // 임계값에 도달하면 다음 노드로 가지 않고 현 위치에 머무름
+            xLocation = nextNode.lat;
+            yLocation = nextNode.lng;
+            newNode = busLocation.lastNode; // 새로운 노드로 이동하지 않음
+          } else {
+            // 임계값을 넘을 경우에만 이동 처리
+            const x = nextNode.lat - busLocation.lat;
+            const y = nextNode.lng - busLocation.lng;
+
+            // 거리와 속도를 기반으로 이동해야 하는 시간 (초 단위) 계산
+            const timeToNextNode = distance / speed; // s
+            const frameRate = 10; // 10ms마다 업데이트
+            const step = frameRate / (timeToNextNode * 1000); // 이동 비율 계산
+
+            // 새로운 위치 계산
+            xLocation = busLocation.lat + x * step;
+            yLocation = busLocation.lng + y * step;
           }
+          // 새로운 위치와 노드 정보 반환
           return {
-            lastNode: newNode,
+            lastNode: newNode, // 노드를 유지
             lat: xLocation,
             lng: yLocation,
           };
         })
       );
     }, 10); // 10ms마다 위치를 업데이트합니다.
+
     return () => clearInterval(intervalId); // 컴포넌트가 언마운트될 때 타이머를 정리합니다.
   };
   return [bus, setBusAdd, resetBusData, moveBusEvent];

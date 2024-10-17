@@ -35,7 +35,7 @@ const Markers = () => {
         />
       ))}
       {nodeData.map((data, index) => (
-        <Marker key={index} position={data.position} />
+        <Marker key={index} position={{ lat: data.lat, lng: data.lng }} />
       ))}
     </>
   );
