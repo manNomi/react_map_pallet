@@ -21,7 +21,6 @@ const useBus = () => {
             (node) => node.lastNode === parseInt(busLocation.lastNode) + 1
           );
 
-          // 마지막 노드가 없을 경우, 처음으로 돌아옴
           if (!nextNode) {
             busLocation = nodeLocation[0];
             return busLocation;
@@ -45,7 +44,7 @@ const useBus = () => {
             // 임계값에 도달하면 다음 노드로 가지 않고 현 위치에 머무름
             xLocation = nextNode.lat;
             yLocation = nextNode.lng;
-            newNode = busLocation.lastNode; // 새로운 노드로 이동하지 않음
+            newNode = nextNode.lastNode; // 새로운 노드 설정
           } else {
             // 임계값을 넘을 경우에만 이동 처리
             const x = nextNode.lat - busLocation.lat;

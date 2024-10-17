@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Marker } from "react-naver-maps";
 import useBus from "../../model/useBus";
 import useTestBusData from "../../../../entities/useTestBusData";
@@ -13,29 +13,42 @@ const BusMarkers = () => {
   // 버스 데이터 통신
   const [busData, error] = useBusData();
 
-  // busData가 변경되었을 때 처리 (lastNode가 다르면 업데이트)
+  const [isBusDataUpdated, setIsBusDataUpdated] = useState(false);
+
   useEffect(() => {
-    console.log(busData);
+    setIsBusDataUpdated(false); // 수정!!
+
     if (busData && busData.data) {
+      const text = [];
+      const text_bus = [];
+      const another = [];
+
+      // busData.data.forEach((busDb, index) => {
+      //   text.push(busDb.lastNode);
+      //   text_bus.push(bus[index].lastNode);
+      //   if (busDb.lastNode !== bus[index].lastNode) {
+      //     another.push(index);
+      //   }
+      // });
+      console.log("통신버스", text);
+      console.log("현재", text_bus);
+      console.log("다름", another);
       setBus((prevBus) => {
         // 처음으로 데이터를 불러오면 그대로 저장
-        moveBusEvent(); // 버스 좌표 주기적으로 업데이트
-
         if (prevBus.length === 0) {
+          setIsBusDataUpdated(true); // 데이터 업데이트 완료 표시
           return busData.data;
         }
-
-        // 처음이 아닐때 데이터 저장
-        return prevBus.map((busLocation, index) => {
+        // 데이터가 업데이트되었는지 확인 후 true로 설정
+        let isUpdated = false;
+        const updatedBus = prevBus.map((busLocation, index) => {
           if (!busData.data[index]) {
             return busLocation; // 안전한 반환
           }
-          // 버스의 원래 노드
           const prevLastNode = parseInt(busLocation.lastNode);
-          //
           const newLastNode = parseInt(busData.data[index].lastNode);
-
           if (prevLastNode !== newLastNode) {
+            isUpdated = true;
             return {
               ...busLocation,
               lat: busData.data[index].lat,
@@ -43,12 +56,22 @@ const BusMarkers = () => {
               lastNode: busData.data[index].lastNode,
             };
           }
-          // 변경 사항이 없으면 기존 busLocation 유지
           return busLocation;
         });
+        if (isUpdated) {
+          setIsBusDataUpdated(true); // 데이터 업데이트 완료 표시
+        }
+        return updatedBus;
       });
     }
   }, [busData]);
+
+  useEffect(() => {
+    if (isBusDataUpdated) {
+      moveBusEvent(); // 버스 좌표 주기적으로 업데이트
+      setIsBusDataUpdated(false); // 상태 초기화 (필요에 따라)
+    }
+  }, [isBusDataUpdated]);
 
   return (
     <>

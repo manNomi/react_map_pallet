@@ -43,7 +43,7 @@ const useBusData = () => {
     fetchData();
     const initInterval = setInterval(() => {
       fetchData();
-    }, 1000);
+    }, 10000);
     return () => clearInterval(initInterval);
   }, []);
 
