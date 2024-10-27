@@ -16,51 +16,51 @@ const BusMarkers = () => {
   const [isBusDataUpdated, setIsBusDataUpdated] = useState(false);
 
   useEffect(() => {
-    setIsBusDataUpdated(false); // 수정!!
+    setIsBusDataUpdated(false); // 데이터 업데이트가 시작될 때 false로 초기화
 
     if (busData && busData.data) {
-      const text = [];
-      const text_bus = [];
-      const another = [];
-
-      // busData.data.forEach((busDb, index) => {
-      //   text.push(busDb.lastNode);
-      //   text_bus.push(bus[index].lastNode);
-      //   if (busDb.lastNode !== bus[index].lastNode) {
-      //     another.push(index);
-      //   }
-      // });
-      console.log("통신버스", text);
-      console.log("현재", text_bus);
-      console.log("다름", another);
       setBus((prevBus) => {
-        // 처음으로 데이터를 불러오면 그대로 저장
+        // 처음으로 데이터를 불러올 때 처리
         if (prevBus.length === 0) {
           setIsBusDataUpdated(true); // 데이터 업데이트 완료 표시
-          return busData.data;
+          return busData.data; // 처음 데이터는 그대로 저장
         }
-        // 데이터가 업데이트되었는지 확인 후 true로 설정
+
+        // 데이터가 업데이트되었는지 확인하는 플래그
         let isUpdated = false;
+
+        // 이전 버스 상태를 새로운 데이터로 업데이트
         const updatedBus = prevBus.map((busLocation, index) => {
-          if (!busData.data[index]) {
-            return busLocation; // 안전한 반환
+          const newBusData = busData.data[index];
+
+          // 데이터가 없을 경우 기존 상태 반환
+          if (!newBusData) {
+            return busLocation;
           }
+
           const prevLastNode = parseInt(busLocation.lastNode);
-          const newLastNode = parseInt(busData.data[index].lastNode);
+          const newLastNode = parseInt(newBusData.lastNode);
+
+          // 노드가 변경되었을 때만 업데이트
           if (prevLastNode !== newLastNode) {
-            isUpdated = true;
+            isUpdated = true; // 업데이트 감지
             return {
               ...busLocation,
-              lat: busData.data[index].lat,
-              lng: busData.data[index].lng,
-              lastNode: busData.data[index].lastNode,
+              lat: newBusData.lat,
+              lng: newBusData.lng,
+              lastNode: newBusData.lastNode, // 새로운 노드 정보로 업데이트
             };
           }
+
+          // 노드 변경이 없으면 기존 상태 유지
           return busLocation;
         });
+
+        // 업데이트가 발생했을 경우에만 플래그 설정
         if (isUpdated) {
           setIsBusDataUpdated(true); // 데이터 업데이트 완료 표시
         }
+
         return updatedBus;
       });
     }

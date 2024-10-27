@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import chat from "../../assets/chat.svg";
 
 export default {
   Container: styled.div`
@@ -16,7 +17,24 @@ export default {
     pointer-events: auto; /* 클릭 이벤트 전달 */
     transform: translate(-50%, -130%); /* InfoWindow를 마커 위로 정렬 */
   `,
-
+  ChatBox: styled.div`
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 15px;
+  `,
+  ChatIcon: styled.div`
+    background-image: url(${chat});
+    width: 24px;
+    height: 24px;
+    background-size: contain;
+    background-repeat: no-repeat;
+  `,
+  Chat: styled.div`
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+  `,
   Header: styled.div`
     display: flex;
     justify-content: space-between;

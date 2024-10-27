@@ -11,19 +11,26 @@ const useBus = () => {
   const resetBusData = () => {
     setBus([]);
   };
-
   const moveBusEvent = () => {
     const speed = 10; // 고정된 속도 (m/s)
     const intervalId = setInterval(() => {
       setBus((prevBus) =>
         prevBus.map((busLocation) => {
+          const currentNode = nodeLocation.find(
+            (node) => node.lastNode === parseInt(busLocation.lastNode)
+          );
           const nextNode = nodeLocation.find(
             (node) => node.lastNode === parseInt(busLocation.lastNode) + 1
           );
 
+          // 마지막 노드가 없으면 다시 처음으로 돌아옴
           if (!nextNode) {
-            busLocation = nodeLocation[0];
-            return busLocation;
+            return {
+              ...busLocation,
+              lastNode: nodeLocation[0].lastNode, // 첫 번째 노드로 돌아가기
+              lat: nodeLocation[0].lat,
+              lng: nodeLocation[0].lng,
+            };
           }
 
           // 현재 위치와 다음 노드 사이의 거리 계산
@@ -41,33 +48,37 @@ const useBus = () => {
 
           // 임계값 이하일 경우 해당 위치에서 멈추고 다음 노드로 이동하지 않음
           if (distance < 5) {
-            // 임계값에 도달하면 다음 노드로 가지 않고 현 위치에 머무름
-            xLocation = nextNode.lat;
-            yLocation = nextNode.lng;
-            newNode = nextNode.lastNode; // 새로운 노드 설정
-          } else {
-            // 임계값을 넘을 경우에만 이동 처리
-            const x = nextNode.lat - busLocation.lat;
-            const y = nextNode.lng - busLocation.lng;
-
-            // 거리와 속도를 기반으로 이동해야 하는 시간 (초 단위) 계산
-            const timeToNextNode = distance / speed; // s
-            const frameRate = 10; // 10ms마다 업데이트
-            const step = frameRate / (timeToNextNode * 1000); // 이동 비율 계산
-
-            // 새로운 위치 계산
-            xLocation = busLocation.lat + x * step;
-            yLocation = busLocation.lng + y * step;
+            // 노드에 도착했으므로 새로운 노드로 업데이트
+            return {
+              ...busLocation,
+              lat: busLocation.lat,
+              lng: busLocation.lng,
+              lastNode: nextNode.lastNode, // 현재 노드를 정확히 업데이트
+            };
           }
-          // 새로운 위치와 노드 정보 반환
+
+          // 이동해야 할 경우 처리
+          const x = nextNode.lat - busLocation.lat;
+          const y = nextNode.lng - busLocation.lng;
+
+          // 이동해야 하는 시간(초 단위) 계산
+          const timeToNextNode = distance / speed; // 초 단위
+          const frameRate = 100; // 100ms마다 업데이트
+          const step = frameRate / (timeToNextNode * 1000); // 이동 비율 계산
+
+          // 새로운 위치 계산
+          xLocation = busLocation.lat + x * step;
+          yLocation = busLocation.lng + y * step;
+
           return {
-            lastNode: newNode, // 노드를 유지
+            ...busLocation,
             lat: xLocation,
             lng: yLocation,
+            lastNode: busLocation.lastNode, // 노드를 변경하지 않음 (도착 시에만 변경)
           };
         })
       );
-    }, 10); // 10ms마다 위치를 업데이트합니다.
+    }, 100); // 100ms마다 위치를 업데이트합니다.
 
     return () => clearInterval(intervalId); // 컴포넌트가 언마운트될 때 타이머를 정리합니다.
   };

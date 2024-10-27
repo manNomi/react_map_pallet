@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect } from "react";
 import {
   NaverMap,
   Marker,
@@ -21,19 +21,21 @@ const MyNaverMap = () => {
   }, []);
 
   return (
-    <Style.Container>
-      <MapDiv style={{ width: "100%", height: "800px" }}>
-        <NaverMap
-          center={option.center}
-          minZoom={option.minZoom}
-          maxZoom={option.maxZoom}
-          zoom={13}>
-          <Marker position={{ lat: 37.450284, lng: 126.653478 }} />
-          <BusMarkers />
-          <Markers />
-        </NaverMap>
-      </MapDiv>
-    </Style.Container>
+    <>
+      <Style.Container>
+        <MapDiv style={{ width: "100%", height: "800px" }}>
+          <NaverMap
+            center={option.center}
+            minZoom={option.minZoom}
+            maxZoom={option.maxZoom}
+            zoom={13}>
+            <Marker position={{ lat: 37.450284, lng: 126.653478 }} />
+            <BusMarkers />
+            <Markers />
+          </NaverMap>
+        </MapDiv>
+      </Style.Container>
+    </>
   );
 };
 

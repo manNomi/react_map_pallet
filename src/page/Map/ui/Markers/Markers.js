@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Marker, useMap } from "react-naver-maps";
 import useBusStop from "../../model/useBusStop";
 import useNode from "../../model/useNodeInit";
@@ -9,7 +9,7 @@ import handleMarkerClick from "../../model/markerClick";
 const Markers = () => {
   const [busStops, setBusAdd, setBusDelete] = useBusStop();
   const [nodeData, setNodeAdd, setNodeDelete] = useNode();
-  const [check] = useCheckAtom();
+  const [check, setCheck] = useCheckAtom();
 
   const map = useMap(); // 지도 객체 가져오기
 

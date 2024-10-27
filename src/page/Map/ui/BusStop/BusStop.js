@@ -1,6 +1,15 @@
+// BusStop.js
 import Style from "./style";
 
-const BusStop = ({ stopName, location, remainingTime, busId, closeEvent }) => {
+const BusStop = ({
+  stopName,
+  location,
+  remainingTime,
+  busId,
+  closeEvent,
+  changePage,
+}) => {
+  const navigate = changePage(); // 컴포넌트 내부에서 Hook 호출
   return (
     <Style.Container>
       <Style.Header>
@@ -17,12 +26,17 @@ const BusStop = ({ stopName, location, remainingTime, busId, closeEvent }) => {
           <Style.Value>{busId}</Style.Value>
         </div>
       </Style.Info>
-      <Style.Marker
-        onClick={() => {
-          closeEvent();
-        }}>
-        ✖
-      </Style.Marker>
+      <Style.ChatBox>
+        <Style.Chat
+          onClick={() => {
+            navigate("/chat");
+          }}>
+          {" "}
+          {/* 수정된 부분 */}
+          <Style.ChatIcon></Style.ChatIcon>채팅
+        </Style.Chat>
+        <Style.Marker onClick={closeEvent}>✖</Style.Marker>
+      </Style.ChatBox>
     </Style.Container>
   );
 };
