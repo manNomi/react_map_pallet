@@ -1,2 +1,2 @@
-import ChatPage from "./ui/ChatPage/Chat";
+import ChatPage from "./ui/ChatPage/ChatPage";
 export default ChatPage;

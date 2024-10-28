@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Marker, useMap } from "react-naver-maps";
 import useBusStop from "../../model/useBusStop";
 import useNode from "../../model/useNodeInit";
-import { busStop, nodeLocation } from "../../../../entities/BusLocationData";
+import {
+  busStop,
+  nodeLocation,
+} from "../../../../entities/Bus/BusLocationData";
 import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
 import handleMarkerClick from "../BusStop/markerClick";
 import usePageChange from "../../model/usePageChange";

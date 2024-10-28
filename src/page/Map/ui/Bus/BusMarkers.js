@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Marker } from "react-naver-maps";
 import useBus from "../../model/useBus";
-import useTestBusData from "../../../../entities/useTestBusData";
+import useTestBusData from "../../../../entities/Bus/useTestBusData";
 import busIcon from "../../assets/bus.svg";
-import useBusData from "../../../../entities/useBusData";
+import useBusData from "../../../../entities/Bus/useBusData";
 const BusMarkers = () => {
   // 버스 테스트 코드
   // const [busTestData, loadingTest, errorTest] = useTestBusData();

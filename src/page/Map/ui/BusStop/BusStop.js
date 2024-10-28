@@ -28,7 +28,7 @@ const BusStop = ({
       <Style.ChatBox>
         <Style.Chat
           onClick={() => {
-            changePage("/chat/" + parseInt(busId));
+            changePage("/chat/" + stopName);
           }}>
           {" "}
           {/* 수정된 부분 */}

@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { nodeLocation } from "../../../entities/BusLocationData";
+import { nodeLocation } from "../../../entities/Bus/BusLocationData";
 
 const useBus = () => {
   const [bus, setBus] = useState([]);
