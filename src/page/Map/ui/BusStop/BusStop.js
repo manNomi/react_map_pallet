@@ -9,7 +9,6 @@ const BusStop = ({
   closeEvent,
   changePage,
 }) => {
-  const navigate = changePage(); // 컴포넌트 내부에서 Hook 호출
   return (
     <Style.Container>
       <Style.Header>
@@ -29,7 +28,7 @@ const BusStop = ({
       <Style.ChatBox>
         <Style.Chat
           onClick={() => {
-            navigate("/chat");
+            changePage("/chat/" + parseInt(busId));
           }}>
           {" "}
           {/* 수정된 부분 */}

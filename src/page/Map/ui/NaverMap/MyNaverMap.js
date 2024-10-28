@@ -9,6 +9,7 @@ import Style from "./style";
 import { useMapOptions } from "../../model/useMapOption";
 import Markers from "../Markers/Markers";
 import BusMarkers from "../Bus/BusMarkers";
+import Aside from "../aside";
 
 const MyNaverMap = () => {
   const [option, setOptionEvent] = useMapOptions();
@@ -22,6 +23,7 @@ const MyNaverMap = () => {
 
   return (
     <>
+      <Aside />
       <Style.Container>
         <MapDiv style={{ width: "100%", height: "800px" }}>
           <NaverMap

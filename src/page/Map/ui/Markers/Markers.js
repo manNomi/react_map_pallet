@@ -4,12 +4,14 @@ import useBusStop from "../../model/useBusStop";
 import useNode from "../../model/useNodeInit";
 import { busStop, nodeLocation } from "../../../../entities/BusLocationData";
 import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
-import handleMarkerClick from "../../model/markerClick";
+import handleMarkerClick from "../BusStop/markerClick";
+import usePageChange from "../../model/usePageChange";
 
 const Markers = () => {
   const [busStops, setBusAdd, setBusDelete] = useBusStop();
   const [nodeData, setNodeAdd, setNodeDelete] = useNode();
   const [check, setCheck] = useCheckAtom();
+  const changePage = usePageChange("./chat");
 
   const map = useMap(); // 지도 객체 가져오기
 
@@ -31,7 +33,7 @@ const Markers = () => {
         <Marker
           key={index}
           position={stopData.busPoint}
-          onClick={() => handleMarkerClick(stopData, map)}
+          onClick={() => handleMarkerClick(stopData, map, changePage)}
         />
       ))}
       {nodeData.map((data, index) => (

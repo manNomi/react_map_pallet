@@ -1,9 +1,7 @@
-import BusStop from "../ui/BusStop/BusStop";
+import BusStop from "./BusStop";
 import ReactDOM from "react-dom/client";
-import usePageChange from "./usePageChange";
-import { BrowserRouter } from "react-router-dom";
 
-const handleMarkerClick = (stopData, map) => {
+const handleMarkerClick = (stopData, map, changePage) => {
   const coord = new window.naver.maps.LatLng(
     stopData.busPoint.lat,
     stopData.busPoint.lng
@@ -18,21 +16,19 @@ const handleMarkerClick = (stopData, map) => {
   const container = document.createElement("div");
   const root = ReactDOM.createRoot(container); // createRoot 사용
   root.render(
-    <BrowserRouter>
-      <BusStop
-        stopName={stopData.busStop}
-        location={stopData.location}
-        remainingTime={5}
-        busId={stopData.busId}
-        busPoint={stopData.busPoint}
-        changePage={() => usePageChange("./chat")}
-        closeEvent={() => {
-          if (map.infoWindow) {
-            map.infoWindow.setMap(null);
-          }
-        }}
-      />
-    </BrowserRouter>
+    <BusStop
+      stopName={stopData.busStop}
+      location={stopData.location}
+      remainingTime={5}
+      busId={stopData.busId}
+      busPoint={stopData.busPoint}
+      changePage={changePage}
+      closeEvent={() => {
+        if (map.infoWindow) {
+          map.infoWindow.setMap(null);
+        }
+      }}
+    />
   );
 
   const infoWindow = new window.naver.maps.InfoWindow({
