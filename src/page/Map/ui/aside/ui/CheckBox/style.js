@@ -2,7 +2,7 @@ import styled from "styled-components";
 export default {
   Container: styled.nav`
     display: flex;
-    width: 100px;
+    width: 120px;
     height: 40px;
     border-radius: 30px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 */
@@ -10,7 +10,7 @@ export default {
     margin-top: 10px;
   `,
   CheckItem: styled.div`
-    width: 80px;
+    width: 100px;
     height: 100%;
     display: flex;
     margin-left: 10px;
@@ -29,6 +29,6 @@ export default {
   `,
   Text: styled.p`
     font-weight: bold;
-    width: 40px;
+    width: 100px;
   `,
 };

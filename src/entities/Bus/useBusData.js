@@ -9,13 +9,13 @@ const getBusData = async () => {
     if (!response.ok) {
       switch (status) {
         case 400:
-          alert("입력 값 오류");
+          console.log("입력 값 오류");
           break;
         case 409:
-          alert("중복임");
+          console.log("중복임");
           break;
         default:
-          alert("서버 오류 발생");
+          console.log("서버 오류 발생");
       }
       return; // 에러 발생 시 이후 처리 중단
     }

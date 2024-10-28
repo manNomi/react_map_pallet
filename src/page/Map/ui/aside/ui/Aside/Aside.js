@@ -29,10 +29,17 @@ const Aside = () => {
               }}
             />
             <CheckBox
-              text="버스"
+              text="정류장"
               check={check.bus}
               change={() => {
                 setCheck("bus");
+              }}
+            />
+            <CheckBox
+              text="TEST"
+              check={check.test}
+              change={() => {
+                setCheck("test");
               }}
             />
           </div>

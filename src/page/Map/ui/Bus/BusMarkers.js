@@ -1,12 +1,9 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Marker } from "react-naver-maps";
 import useBus from "../../model/useBus";
-import useTestBusData from "../../../../entities/Bus/useTestBusData";
 import busIcon from "../../assets/bus.svg";
 import useBusData from "../../../../entities/Bus/useBusData";
 const BusMarkers = () => {
-  // 버스 테스트 코드
-  // const [busTestData, loadingTest, errorTest] = useTestBusData();
   // 버스 좌표 상태
   const [bus, setBus, resetBus, moveBusEvent] = useBus();
 
@@ -28,6 +25,7 @@ const BusMarkers = () => {
 
         // 데이터가 업데이트되었는지 확인하는 플래그
         let isUpdated = false;
+        console.log(busData);
 
         // 이전 버스 상태를 새로운 데이터로 업데이트
         const updatedBus = prevBus.map((busLocation, index) => {
@@ -43,6 +41,9 @@ const BusMarkers = () => {
 
           // 노드가 변경되었을 때만 업데이트
           if (prevLastNode !== newLastNode) {
+            console.log(prevLastNode, newLastNode);
+            console.log(newBusData.lat, newBusData.lng, newBusData.lastNode);
+
             isUpdated = true; // 업데이트 감지
             return {
               ...busLocation,

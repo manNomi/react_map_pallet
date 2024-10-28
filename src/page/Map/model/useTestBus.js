@@ -1,9 +1,8 @@
-import { useCallback, useState, useRef } from "react";
+import { useState } from "react";
 import { nodeLocation } from "../../../entities/Bus/BusLocationData";
 
-const useBus = () => {
+const useTestBus = () => {
   const [bus, setBus] = useState([]);
-  const intervalRef = useRef(null);
 
   const setBusAdd = (data) => {
     setBus(data);
@@ -11,26 +10,19 @@ const useBus = () => {
 
   const resetBusData = () => {
     setBus([]);
-    // 리셋 시 interval 정리
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
   };
 
-  const moveBusEvent = useCallback(() => {
+  const moveBusEvent = () => {
     const speed = 10; // 고정된 속도 (m/s)
-
-    // 이미 interval이 실행 중이라면 새로 설정하지 않음
-    if (intervalRef.current) return;
-
-    intervalRef.current = setInterval(() => {
+    const intervalId = setInterval(() => {
       setBus((prevBus) =>
         prevBus.map((busLocation) => {
+          // 버스마다의 nextNode 찾기
           const nextNode = nodeLocation.find(
             (node) => node.lastNode === parseInt(busLocation.lastNode) + 1
           );
 
+          // 마지막 노드가 없으면 처음 위치로 돌아감
           if (!nextNode) {
             return {
               ...busLocation,
@@ -40,6 +32,7 @@ const useBus = () => {
             };
           }
 
+          // 현재 위치와 다음 노드 사이 거리 계산
           const distance = getDistanceInMeters(
             nextNode.lat,
             nextNode.lng,
@@ -47,43 +40,47 @@ const useBus = () => {
             busLocation.lng
           );
 
+          // 도달 시 다음 노드로 업데이트
           if (distance < 5) {
             return {
               ...busLocation,
               lat: nextNode.lat,
               lng: nextNode.lng,
-              lastNode: busLocation.lastNode,
+              lastNode: nextNode.lastNode,
             };
           }
 
-          const x = nextNode.lat - busLocation.lat;
-          const y = nextNode.lng - busLocation.lng;
+          // 이동해야 할 경우의 변화량 계산
+          const frameRate = 100; // 100ms마다 업데이트
           const timeToNextNode = distance / speed;
-          const frameRate = 100;
           const step = frameRate / (timeToNextNode * 1000);
 
+          // 각 방향으로 개별 이동량 계산
+          const xLocation =
+            busLocation.lat + (nextNode.lat - busLocation.lat) * step;
+          const yLocation =
+            busLocation.lng + (nextNode.lng - busLocation.lng) * step;
+
+          // 버스의 개별 위치 업데이트
           return {
             ...busLocation,
-            lat: busLocation.lat + x * step,
-            lng: busLocation.lng + y * step,
+            lat: xLocation,
+            lng: yLocation,
+            lastNode: busLocation.lastNode, // 노드는 도달 시에만 변경
           };
         })
       );
     }, 100);
 
-    // interval 정리 함수 반환
-    return () => {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    };
-  }, [setBus]);
+    return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 타이머 제거
+  };
 
   return [bus, setBusAdd, resetBusData, moveBusEvent];
 };
 
 // Haversine 공식으로 두 지점 간의 거리 계산 (미터 단위)
 function getDistanceInMeters(lat1, lng1, lat2, lng2) {
-  const R = 6371000;
+  const R = 6371000; // 지구 반지름 (미터)
   const toRadians = (degree) => (degree * Math.PI) / 180;
 
   const dLat = toRadians(lat2 - lat1);
@@ -98,7 +95,7 @@ function getDistanceInMeters(lat1, lng1, lat2, lng2) {
 
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-  return R * c;
+  return R * c; // 두 지점 간의 거리 (미터)
 }
 
-export default useBus;
+export default useTestBus;
