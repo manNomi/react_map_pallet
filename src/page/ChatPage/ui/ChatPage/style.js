@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import back_icon from "../../assets/back_icon.svg";
 
 export default {
   Container: styled.div`
@@ -17,6 +18,13 @@ export default {
     height: 40px;
     border-bottom: 2px solid black;
   `,
+  BackBtn: styled.button`
+    width: 40px;
+    height: 40px;
+    background-image: url(${back_icon});
+    background-repeat: no-repeat;
+    background-size: cover;
+  `,
   Logo: styled.p`
     font-size: 15px;
     font-weight: 900;
@@ -27,10 +35,13 @@ export default {
   `,
   Content: styled.main`
     display: flex;
-    justify-content: center;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
     width: 100%;
     height: 100%;
-    flex: 1;
-    flex-grow: 1;
+    overflow-y: auto; /* 스크롤을 활성화 */
+    max-height: calc(100vh - 80px); /* Header 높이를 뺀 나머지 공간 사용 */
+    min-height: calc(100vh - 80px); /* Header 높이를 뺀 나머지 공간 사용 */
   `,
 };

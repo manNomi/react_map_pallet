@@ -1,8 +1,10 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { Marker } from "react-naver-maps";
 import useBus from "../../model/useBus";
 import busIcon from "../../assets/bus.svg";
 import useBusData from "../../../../entities/Bus/useBusData";
+import { useParams } from "react-router-dom";
+
 const BusMarkers = () => {
   // 버스 좌표 상태
   const [bus, setBus, resetBus, moveBusEvent] = useBus();
@@ -25,7 +27,6 @@ const BusMarkers = () => {
 
         // 데이터가 업데이트되었는지 확인하는 플래그
         let isUpdated = false;
-        console.log(busData);
 
         // 이전 버스 상태를 새로운 데이터로 업데이트
         const updatedBus = prevBus.map((busLocation, index) => {
@@ -41,9 +42,6 @@ const BusMarkers = () => {
 
           // 노드가 변경되었을 때만 업데이트
           if (prevLastNode !== newLastNode) {
-            console.log(prevLastNode, newLastNode);
-            console.log(newBusData.lat, newBusData.lng, newBusData.lastNode);
-
             isUpdated = true; // 업데이트 감지
             return {
               ...busLocation,
@@ -74,10 +72,31 @@ const BusMarkers = () => {
     }
   }, [isBusDataUpdated]);
 
+  const busStopId = useParams("id").id;
+  // busStopId가 있을 때 가장 가까운 버스 정류장 선택
+  const setBusOnly = (bus) => {
+    const candidates = bus.filter(
+      (item) => item.lastNode <= parseInt(busStopId)
+    );
+    candidates.sort((a, b) => b.lastNode - a.lastNode); // 내림차순 정렬
+    return candidates[0]; // 가장 큰 lastNode를 가진 항목 반환
+  };
+  const closestBusLocation = busStopId ? setBusOnly(bus) : null;
+
   return (
     <>
-      {error ? (
-        <div>오류</div>
+      {closestBusLocation ? (
+        <Marker
+          position={
+            new window.naver.maps.LatLng(
+              closestBusLocation.lat,
+              closestBusLocation.lng
+            )
+          }
+          icon={{
+            content: `<img src="${busIcon}" width="20" height="20" />`,
+          }}
+        />
       ) : (
         bus.map((busLocation, index) => {
           // 유효성 검사: position이 없을 경우 예외 처리

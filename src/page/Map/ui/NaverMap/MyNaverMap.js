@@ -14,8 +14,8 @@ import TestBusMarkers from "../Bus/TestBusMarker";
 import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
 
 const MyNaverMap = () => {
-  const [option, setOptionEvent] = useMapOptions();
   const [check, setCheck] = useCheckAtom();
+  const [option, setOptionEvent] = useMapOptions();
 
   useEffect(() => {
     setOptionEvent({
@@ -36,7 +36,6 @@ const MyNaverMap = () => {
             maxZoom={option.maxZoom}
             zoom={13}>
             <Marker position={{ lat: 37.450284, lng: 126.653478 }} />
-
             {check.test ? <TestBusMarkers /> : <BusMarkers />}
             <Markers />
           </NaverMap>

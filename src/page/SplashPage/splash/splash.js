@@ -1,8 +1,18 @@
 // SplashPage.js
-import React from "react";
+import React, { useEffect } from "react";
 import { SplashContainer, Logo, Tagline, LoadingIndicator, Box } from "./style";
+import usePageChange from "../../Map/model/usePageChange";
 
 const SplashPage = () => {
+  const pageChange = usePageChange();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      pageChange("/login");
+    }, 3000);
+    // Clean up timer if component unmounts before timeout
+    return () => clearTimeout(timer);
+  }, [pageChange]);
   return (
     <SplashContainer>
       <Box>

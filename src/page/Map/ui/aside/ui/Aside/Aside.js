@@ -45,7 +45,7 @@ const Aside = () => {
           </div>
         )}
       </Style.Aside>
-      <SearchContainer />
+      {/* <SearchContainer /> */}
     </>
   );
 };

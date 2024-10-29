@@ -1,12 +1,19 @@
 import BusStop from "./BusStop";
 import ReactDOM from "react-dom/client";
 
-const handleMarkerClick = (stopData, map, changePage) => {
+const handleMarkerClick = (
+  stopData,
+  map,
+  changePage,
+  setBus,
+  setTestBus,
+  changeBusStop,
+  setOptionEvent
+) => {
   const coord = new window.naver.maps.LatLng(
     stopData.busPoint.lat,
     stopData.busPoint.lng
   );
-  console.log("클릭된 좌표:", coord);
 
   // 기존 InfoWindow 삭제 (기존 오버레이가 있다면)
   if (map.infoWindow) {
@@ -22,10 +29,15 @@ const handleMarkerClick = (stopData, map, changePage) => {
       remainingTime={5}
       busId={stopData.busId}
       busPoint={stopData.busPoint}
+      setBus={setBus}
+      setTestBus={setTestBus}
       changePage={changePage}
+      stopData={stopData}
+      setOptionEvent={() => setOptionEvent({ center: coord, zoom: 15 })} // 지도 옵션 설정
       closeEvent={() => {
         if (map.infoWindow) {
           map.infoWindow.setMap(null);
+          changePage("/home");
         }
       }}
     />

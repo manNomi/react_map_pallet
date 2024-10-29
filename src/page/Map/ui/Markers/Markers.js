@@ -9,13 +9,18 @@ import {
 import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
 import handleMarkerClick from "../BusStop/markerClick";
 import usePageChange from "../../model/usePageChange";
+import useBus from "../../model/useBus";
+import useTestBus from "../../model/useTestBus";
+import { useMapOptions } from "../../model/useMapOption";
 
 const Markers = () => {
   const [busStops, setBusAdd, setBusDelete] = useBusStop();
   const [nodeData, setNodeAdd, setNodeDelete] = useNode();
-  const [check, setCheck] = useCheckAtom();
+  const [check] = useCheckAtom();
   const changePage = usePageChange("./chat");
-
+  const [, setBus, ,] = useBus();
+  const [, setTestBus, ,] = useTestBus();
+  const [, setOptionEvent] = useMapOptions();
   const map = useMap(); // 지도 객체 가져오기
 
   // 마커 클릭 핸들러: 네이버 API 사용하여 InfoWindow 생성
@@ -36,7 +41,16 @@ const Markers = () => {
         <Marker
           key={index}
           position={stopData.busPoint}
-          onClick={() => handleMarkerClick(stopData, map, changePage)}
+          onClick={() =>
+            handleMarkerClick(
+              stopData,
+              map,
+              changePage,
+              setBus,
+              setTestBus,
+              setOptionEvent
+            )
+          }
         />
       ))}
       {nodeData.map((data, index) => (

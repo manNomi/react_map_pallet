@@ -25,6 +25,7 @@ export const Container = styled.footer`
   align-items: center;
   width: 100%;
   height: 40px;
+  border-top: 1px solid black;
 `;
 
 export const UserImg = styled.img`

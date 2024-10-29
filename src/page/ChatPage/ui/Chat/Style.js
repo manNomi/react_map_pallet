@@ -5,6 +5,12 @@ export const Container = styled.div`
   width: 80%;
 `;
 
+export const ChatUser = styled.div`
+  display: flex;
+  width: 100%;
+  font-weight: 900;
+`;
+
 // 상대방 메시지 말풍선
 export const ChatBubble = styled.div`
   max-width: 60%;

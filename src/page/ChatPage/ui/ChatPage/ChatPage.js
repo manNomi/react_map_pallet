@@ -1,21 +1,110 @@
-import Style from "./style";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
+import Style from "./style";
 import CommentInput from "../../../../widget/comment_input";
-import Chat from "../Chat/Chat";
+import { io } from "socket.io-client";
+import MyChat from "../Chat/MyChat";
+import AnotherChat from "../Chat/AnotherChat";
+import InputNickName from "../InputNickName/InputNickName";
+import usePageChange from "../../../Map/model/usePageChange";
 
 const ChatPage = () => {
-  const { id } = useParams(); // URL에서 id 파라미터를 가져옴
-  console.log(id);
-  return (
+  const { id } = useParams();
+  const [messages, setMessages] = useState([]);
+  const [room, setRoom] = useState("");
+  const [nickname, setNickname] = useState("");
+  const socket = useRef(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const pageChange = usePageChange();
+  useEffect(() => {
+    // 소켓 초기화
+    socket.current = io("http://43.202.84.174:7700/");
+
+    // 연결 성공 이벤트
+    socket.current.on("connect", () => {
+      setIsConnected(true);
+      console.log("Socket connected:", socket.current.connected);
+    });
+
+    // 연결 끊김 이벤트
+    socket.current.on("disconnect", () => {
+      setIsConnected(false);
+      console.log("Socket disconnected:", socket.current.connected);
+    });
+
+    // 메시지 수신 이벤트 리스너 추가
+    socket.current.on("message", (msg) => {
+      setMessages((prevMessages) => [...prevMessages, { msg, nickname }]);
+    });
+
+    // 컴포넌트 언마운트 시 소켓 연결 해제
+    return () => {
+      socket.current.disconnect();
+    };
+  }, []); // 빈 의존성 배열로 한 번만 실행
+  const param = useParams("id");
+  const joinRoom = (param) => {
+    console.log(param.id);
+    if (!nickname) return;
+    if (param.id === "주안역환승정류장") {
+      setRoom(1);
+      socket.current.emit("join room", { room: 1, nickname });
+    } else if (param.id === "인하대후문") {
+      setRoom(2);
+      socket.current.emit("join room", { room: 2, nickname });
+    } else {
+      alert("아직 개발중인 채팅방입니다");
+    }
+  };
+
+  const sendMessage = (message) => {
+    if (!room) return alert("방에 먼저 입장하세요.");
+    console.log("클릭됨", message, room);
+    socket.current.emit("chat message", { message, room });
+  };
+  useEffect(() => {
+    console.log(messages);
+  }, [messages]);
+
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages, scrollRef]);
+
+  return room === "" ? (
+    <>
+      <InputNickName
+        nickname={nickname}
+        setNickname={setNickname}
+        joinRoom={() => {
+          joinRoom(param);
+        }}
+      />
+    </>
+  ) : (
     <Style.Container>
       <Style.Header>
+        <Style.BackBtn
+          onClick={() => {
+            pageChange("/home");
+          }}></Style.BackBtn>
         <Style.Logo>{id}</Style.Logo>
         <Style.Title>511번 채팅방</Style.Title>
       </Style.Header>
-      <Style.Content>
-        <Chat />
+      <Style.Content ref={scrollRef}>
+        {messages.map((value, index) =>
+          value.nickname === nickname ? (
+            <AnotherChat key={index} message={value.msg} />
+          ) : (
+            <MyChat key={index} message={value.msg} />
+          )
+        )}
       </Style.Content>
-      <CommentInput />
+      {/* CommentInput에 sendMessage 함수 전달 */}
+      <CommentInput onSendMessage={sendMessage} />
     </Style.Container>
   );
 };

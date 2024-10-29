@@ -1,6 +1,6 @@
 // BusStop.js
 import Style from "./style";
-
+import { useEffect } from "react";
 const BusStop = ({
   stopName,
   location,
@@ -8,7 +8,18 @@ const BusStop = ({
   busId,
   closeEvent,
   changePage,
+  stopData,
+  setOptionEvent,
 }) => {
+  changePage(`/home/${stopData.lastNode}`);
+
+  // useEffect(() => {
+  //   setOptionEvent({
+  //     minZoom: 10,
+  //     maxZoom: 18,
+  //     center: { lat: stopData.lat, lng: stopData.lng },
+  //   });
+  // }, []);
   return (
     <Style.Container>
       <Style.Header>
