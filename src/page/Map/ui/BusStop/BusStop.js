@@ -25,6 +25,7 @@ const BusStop = ({
       <Style.Header>
         <span>{stopName}</span>
         <span>{location}</span>
+        <Style.Marker onClick={closeEvent}>✖</Style.Marker>
       </Style.Header>
       <Style.Info>
         <div>
@@ -41,11 +42,11 @@ const BusStop = ({
           onClick={() => {
             changePage("/chat/" + stopName);
           }}>
-          {" "}
-          {/* 수정된 부분 */}
-          <Style.ChatIcon></Style.ChatIcon>채팅
+          <Style.ChatOut>
+            <Style.ChatIcon></Style.ChatIcon>
+            <Style.ChatText>채팅</Style.ChatText>
+          </Style.ChatOut>
         </Style.Chat>
-        <Style.Marker onClick={closeEvent}>✖</Style.Marker>
       </Style.ChatBox>
     </Style.Container>
   );

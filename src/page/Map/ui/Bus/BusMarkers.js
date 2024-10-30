@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Marker } from "react-naver-maps";
 import useBus from "../../model/useBus";
 import busIcon from "../../assets/bus.svg";
+import greenBusIcon from "../../assets/green_bus.svg";
 import useBusData from "../../../../entities/Bus/useBusData";
 import { useParams } from "react-router-dom";
 
@@ -94,7 +95,7 @@ const BusMarkers = () => {
             )
           }
           icon={{
-            content: `<img src="${busIcon}" width="20" height="20" />`,
+            content: `<img src="${greenBusIcon}" width="50px" height="50px" />`,
           }}
         />
       ) : (

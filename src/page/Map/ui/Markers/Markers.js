@@ -12,6 +12,7 @@ import usePageChange from "../../model/usePageChange";
 import useBus from "../../model/useBus";
 import useTestBus from "../../model/useTestBus";
 import { useMapOptions } from "../../model/useMapOption";
+import bus_stop_icon from "../../assets/bus_stop_icon.svg";
 
 const Markers = () => {
   const [busStops, setBusAdd, setBusDelete] = useBusStop();

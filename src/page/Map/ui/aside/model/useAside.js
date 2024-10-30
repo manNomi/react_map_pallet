@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const useAside = () => {
-  const [asideOpen, setAsideChange] = useState(true);
+  const [asideOpen, setAsideChange] = useState(false);
   const setAsideChangeEvent = () => {
     setAsideChange(!asideOpen);
   };

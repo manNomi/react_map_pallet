@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import chat from "../../assets/chat.svg";
+import chat from "../../assets/chat_icon.svg";
 
 export default {
   Container: styled.div`
@@ -19,7 +19,7 @@ export default {
   `,
   ChatBox: styled.div`
     display: flex;
-    justify-content: space-around;
+    justify-content: end;
     align-items: center;
     font-size: 15px;
   `,
@@ -29,11 +29,17 @@ export default {
     height: 24px;
     background-size: contain;
     background-repeat: no-repeat;
+    margin-right: 5px;
   `,
   Chat: styled.div`
     display: flex;
     align-items: center;
     font-size: 10px;
+  `,
+  ChatOut: styled.div`
+    display: flex;
+    justify-content: centere;
+    align-items: center;
   `,
   Header: styled.div`
     display: flex;
@@ -57,10 +63,12 @@ export default {
     font-size: 14px;
     font-weight: bold;
   `,
+  ChatText: styled.p`
+    font-weight: 900;
+  `,
 
   Marker: styled.div`
     align-self: flex-end;
     font-size: 20px;
-    color: #42a5f5;
   `,
 };

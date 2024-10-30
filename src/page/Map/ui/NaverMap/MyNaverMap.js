@@ -12,6 +12,7 @@ import BusMarkers from "../Bus/BusMarkers";
 import Aside from "../aside";
 import TestBusMarkers from "../Bus/TestBusMarker";
 import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
+import Advertise from "../Advertise/ui/Advertise";
 
 const MyNaverMap = () => {
   const [check, setCheck] = useCheckAtom();
@@ -29,7 +30,7 @@ const MyNaverMap = () => {
     <>
       <Aside />
       <Style.Container>
-        <MapDiv style={{ width: "100%", height: "800px" }}>
+        <MapDiv style={{ width: "100%", height: "600px" }}>
           <NaverMap
             center={option.center}
             minZoom={option.minZoom}
@@ -41,6 +42,7 @@ const MyNaverMap = () => {
           </NaverMap>
         </MapDiv>
       </Style.Container>
+      <Advertise />
     </>
   );
 };

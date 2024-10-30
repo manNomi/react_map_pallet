@@ -4,6 +4,7 @@ import busIcon from "../../assets/bus.svg";
 import useTestBus from "../../model/useTestBus";
 import useTestBusData from "../../../../entities/Bus/useTestBusData";
 import { useParams } from "react-router-dom";
+import greenBusIcon from "../../assets/green_bus.svg";
 
 const TestBusMarkers = () => {
   const [bus, setBus, resetBusData, moveBusEvent] = useTestBus();
@@ -50,7 +51,7 @@ const TestBusMarkers = () => {
             )
           }
           icon={{
-            content: `<img src="${busIcon}" width="20" height="20" />`,
+            content: `<img src="${greenBusIcon}" width="30px" height="30px" />`,
           }}
         />
       ) : (
