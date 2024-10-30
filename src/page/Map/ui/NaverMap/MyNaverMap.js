@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   NaverMap,
   Marker,
@@ -12,7 +12,7 @@ import BusMarkers from "../Bus/BusMarkers";
 import Aside from "../aside";
 import TestBusMarkers from "../Bus/TestBusMarker";
 import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
-import Advertise from "../Advertise/ui/Advertise";
+import Advertise from "../Advertise";
 
 const MyNaverMap = () => {
   const [check, setCheck] = useCheckAtom();
@@ -30,7 +30,7 @@ const MyNaverMap = () => {
     <>
       <Aside />
       <Style.Container>
-        <MapDiv style={{ width: "100%", height: "600px" }}>
+        <MapDiv style={{ width: "100%", height: "90vh" }}>
           <NaverMap
             center={option.center}
             minZoom={option.minZoom}
