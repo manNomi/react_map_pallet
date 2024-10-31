@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Container, Logo, LoginButton } from "./style";
+import { Container, Logo, LoginButton, MoveBtn } from "./style";
 import { useNavigate } from "react-router-dom";
 import { loadKakaoSdk } from "../../model/loadKakaoSDK";
 
@@ -34,6 +34,12 @@ const LoginPage = () => {
       <Logo>511 BUSLIVE</Logo>
       <div>
         <Logo>카카오와 함께</Logo>
+        <MoveBtn
+          onClick={() => {
+            navigate("/home");
+          }}>
+          로그인 없이 이용
+        </MoveBtn>
         <LoginButton onClick={handleLogin}>카카오 로그인하기</LoginButton>
       </div>
     </Container>

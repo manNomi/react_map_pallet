@@ -1,10 +1,10 @@
-import { ChatBubble, Container } from "./Style";
+import { UserChatBubble, Container } from "./Style";
 
 const MyChat = (props) => {
-  console.log(props.message);
+  const content = props.message;
   return (
     <Container>
-      <ChatBubble id="message">{props.message}</ChatBubble>
+      <UserChatBubble id="message">{content}</UserChatBubble>
     </Container>
   );
 };

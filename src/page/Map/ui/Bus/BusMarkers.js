@@ -95,7 +95,7 @@ const BusMarkers = () => {
             )
           }
           icon={{
-            content: `<img src="${greenBusIcon}" width="50px" height="50px" />`,
+            content: `<img src="${greenBusIcon}" width="40px" height="40px" />`,
           }}
         />
       ) : (

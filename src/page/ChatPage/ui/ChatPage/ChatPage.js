@@ -33,8 +33,8 @@ const ChatPage = () => {
     });
 
     // 메시지 수신 이벤트 리스너 추가
-    socket.current.on("message", (msg) => {
-      setMessages((prevMessages) => [...prevMessages, { msg, nickname }]);
+    socket.current.on("message", (message) => {
+      setMessages((prevMessages) => [...prevMessages, { message, nickname }]);
     });
 
     // 컴포넌트 언마운트 시 소켓 연결 해제
@@ -42,14 +42,21 @@ const ChatPage = () => {
       socket.current.disconnect();
     };
   }, []); // 빈 의존성 배열로 한 번만 실행
-  const param = useParams("id");
+  const param = useParams("id").id;
+  useEffect(() => {
+    if (param !== "주안역환승정류장" && param !== "인하대후문") {
+      alert(
+        "개발중인 채팅방입니다 현재 가능 채팅방 [주안역환승정류장,인하대후문]"
+      );
+      pageChange("/home");
+    }
+  }, [param]);
   const joinRoom = (param) => {
-    console.log(param.id);
     if (!nickname) return;
-    if (param.id === "주안역환승정류장") {
+    if (param === "주안역환승정류장") {
       setRoom(1);
       socket.current.emit("join room", { room: 1, nickname });
-    } else if (param.id === "인하대후문") {
+    } else if (param === "인하대후문") {
       setRoom(2);
       socket.current.emit("join room", { room: 2, nickname });
     } else {
@@ -59,7 +66,6 @@ const ChatPage = () => {
 
   const sendMessage = (message) => {
     if (!room) return alert("방에 먼저 입장하세요.");
-    console.log("클릭됨", message, room);
     socket.current.emit("chat message", { message, room });
   };
   useEffect(() => {
@@ -96,10 +102,14 @@ const ChatPage = () => {
       </Style.Header>
       <Style.Content ref={scrollRef}>
         {messages.map((value, index) =>
-          value.nickname === nickname ? (
-            <AnotherChat key={index} message={value.msg} />
+          value.message.nickname !== nickname ? (
+            <AnotherChat
+              key={index}
+              message={value.message.message}
+              nickname={value.message.nickname}
+            />
           ) : (
-            <MyChat key={index} message={value.msg} />
+            <MyChat key={index} message={value.message.message} />
           )
         )}
       </Style.Content>

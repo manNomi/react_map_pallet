@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const getBusData = async () => {
   try {
-    const response = await fetch("http://43.202.84.174:8500/busLife", {});
+    const response = await fetch("http://43.202.84.174:7700/bus/info/all", {});
     const status = response.status;
 
     // 상태 코드에 따른 처리

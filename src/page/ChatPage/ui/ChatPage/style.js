@@ -41,7 +41,7 @@ export default {
     width: 100%;
     height: 100%;
     overflow-y: auto; /* 스크롤을 활성화 */
-    max-height: calc(100vh - 80px); /* Header 높이를 뺀 나머지 공간 사용 */
-    min-height: calc(100vh - 80px); /* Header 높이를 뺀 나머지 공간 사용 */
+    max-height: calc(100vh - 120px); /* Header 높이를 뺀 나머지 공간 사용 */
+    min-height: calc(100vh - 120px); /* Header 높이를 뺀 나머지 공간 사용 */
   `,
 };

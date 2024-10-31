@@ -24,7 +24,7 @@ export const Container = styled.footer`
   display: flex;
   align-items: center;
   width: 100%;
-  height: 40px;
+  height: 60px;
   border-top: 1px solid black;
 `;
 
@@ -32,11 +32,10 @@ export const UserImg = styled.img`
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: brown;
 `;
 export const WriteBtn = styled.button`
-  width: 30px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
   border: none;
   border-radius: 12px;
   background-color: #28a745;

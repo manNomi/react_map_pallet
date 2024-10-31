@@ -19,6 +19,15 @@ export const Logo = styled.h1`
   font-weight: 900;
 `;
 
+export const MoveBtn = styled.p`
+  font-weight: 100;
+  text-align: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: wheat;
+  cursor: pointer;
+`;
+
 export const LoginButton = styled.button`
   background-color: #efe10c;
   color: black;

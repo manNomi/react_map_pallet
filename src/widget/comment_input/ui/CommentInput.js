@@ -5,6 +5,22 @@ const CommentInput = ({ onSendMessage }) => {
   const [message, setMessage] = useState("");
   const inputRef = useRef(null);
 
+  const setMessageEvent = (text) => {
+    setMessage(text);
+  };
+  const handleKeyPress = (e) => {
+    if (e) e.stopPropagation();
+    setMessage(e.target.value);
+    if (e.key === "Enter") {
+      handleSend(e);
+    }
+  };
+  const handleClick = (e) => {
+    if (e) e.stopPropagation();
+    setMessage(e.target.value);
+    handleSend();
+  };
+
   const handleSend = () => {
     if (message.trim()) {
       onSendMessage(message);
@@ -20,9 +36,14 @@ const CommentInput = ({ onSendMessage }) => {
           ref={inputRef}
           type="text"
           placeholder="메시지 입력..."
-          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyPress}
         />
-        <WriteBtn onClick={handleSend}>전송</WriteBtn>
+        <WriteBtn
+          onClick={() => {
+            handleClick();
+          }}>
+          전송
+        </WriteBtn>
       </Write>
     </Container>
   );

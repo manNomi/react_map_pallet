@@ -1,12 +1,12 @@
-import { UserChatBubble, ChatUser, Container } from "./Style";
+import { ChatBubble, ChatUser, Container } from "./Style";
 
 const AnotherChat = (props) => {
-  const nickname = props.message.split(":")[0]; // 닉네임 부분
-  const content = props.message.split(":").slice(1).join(":"); // 내용 부분
+  const nickname = props.nickname;
+  const content = props.message;
   return (
     <Container>
       <ChatUser>{nickname}</ChatUser>
-      <UserChatBubble>{content}</UserChatBubble>
+      <ChatBubble>{content}</ChatBubble>
     </Container>
   );
 };

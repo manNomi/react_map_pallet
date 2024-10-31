@@ -51,7 +51,7 @@ const TestBusMarkers = () => {
             )
           }
           icon={{
-            content: `<img src="${greenBusIcon}" width="30px" height="30px" />`,
+            content: `<img src="${greenBusIcon}" width="40px" height="40px" />`,
           }}
         />
       ) : (
