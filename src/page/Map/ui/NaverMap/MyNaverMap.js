@@ -36,7 +36,6 @@ const MyNaverMap = () => {
             minZoom={option.minZoom}
             maxZoom={option.maxZoom}
             zoom={13}>
-            <Marker position={{ lat: 37.450284, lng: 126.653478 }} />
             {check.test ? <TestBusMarkers /> : <BusMarkers />}
             <Markers />
           </NaverMap>

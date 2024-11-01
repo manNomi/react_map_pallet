@@ -10,7 +10,7 @@ const Explain = () => {
   }, [id]);
   return (
     paramState && (
-      <Style.Container onClick={() => {}}>
+      <Style.Container>
         <Style.Box>
           <Busicon color={1} width={40} height={40} />
           <Style.Text>혼잡</Style.Text>
