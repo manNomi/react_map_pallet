@@ -39,9 +39,9 @@ export const getTestBusData = () => {
       lastbusyn: 0,
     },
     {
-      lastNode: 60,
-      lat: 37.4487536815333,
-      lng: 126.649458501003,
+      lastNode: 49,
+      lat: 37.4514650937186,
+      lng: 126.667223935426,
       congestion: 3,
       lastbusyn: 1,
     },

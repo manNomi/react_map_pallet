@@ -30,7 +30,7 @@ const TestBusMarkers = () => {
   // busStopId가 있을 때 가장 가까운 버스 정류장 선택
   const setBusOnly = (bus) => {
     const candidates = bus.filter(
-      (item) => item.lastNode <= parseInt(busStopId)
+      (item) => item.lastNode < parseInt(busStopId)
     );
     candidates.sort((a, b) => b.lastNode - a.lastNode); // 내림차순 정렬
     return candidates[0]; // 가장 큰 lastNode를 가진 항목 반환
