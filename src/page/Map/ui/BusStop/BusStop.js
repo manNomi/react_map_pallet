@@ -1,18 +1,21 @@
 // BusStop.js
+import { useEffect } from "react";
 import Style from "./style";
 
 const BusStop = ({
   stopName,
   location,
   remainingTime,
-  busId,
+  busStopNumber,
   closeEvent,
   changePage,
   stopData,
-  setOptionEvent,
 }) => {
+  console.log(stopData, "내림");
   changePage(`/home/${stopData.lastNode}`);
-
+  useEffect(() => {
+    console.log(remainingTime);
+  }, [remainingTime]);
   return (
     <Style.Container>
       <Style.Header>
@@ -23,11 +26,11 @@ const BusStop = ({
       <Style.Info>
         <div>
           <Style.Label>남은시간</Style.Label>
-          <Style.Value>{remainingTime}분</Style.Value>
+          <Style.Value>{remainingTime}</Style.Value>
         </div>
         <div>
-          <Style.Label>버스 정류장 id</Style.Label>
-          <Style.Value>{busId}</Style.Value>
+          <Style.Label>정류장 id</Style.Label>
+          <Style.Value>{busStopNumber}</Style.Value>
         </div>
       </Style.Info>
       <Style.ChatBox>

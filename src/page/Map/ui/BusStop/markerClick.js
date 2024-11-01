@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import BusStop from "./BusStop";
 import ReactDOM from "react-dom/client";
 
@@ -7,9 +8,13 @@ const handleMarkerClick = (
   changePage,
   setBus,
   setTestBus,
-  changeBusStop,
-  setOptionEvent
+  setOptionEvent,
+  busStopData
 ) => {
+  console.log("핸들러", busStopData);
+  console.log(stopData);
+
+  if (!busStopData) return;
   const coord = new window.naver.maps.LatLng(
     stopData.busPoint.lat,
     stopData.busPoint.lng
@@ -26,14 +31,14 @@ const handleMarkerClick = (
     <BusStop
       stopName={stopData.busStop}
       location={stopData.location}
-      remainingTime={5}
-      busId={stopData.busId}
+      remainingTime={busStopData ? busStopData : "X"}
+      busStopNumber={stopData.busStopNumber}
       busPoint={stopData.busPoint}
       setBus={setBus}
       setTestBus={setTestBus}
       changePage={changePage}
       stopData={stopData}
-      setOptionEvent={() => setOptionEvent({ center: coord, zoom: 15 })} // 지도 옵션 설정
+      setOptionEvent={() => setOptionEvent({ center: coord, zoom: 15 })}
       closeEvent={() => {
         if (map.infoWindow) {
           map.infoWindow.setMap(null);

@@ -12,7 +12,7 @@ import usePageChange from "../../model/usePageChange";
 import useBus from "../../model/useBus";
 import useTestBus from "../../model/useTestBus";
 import { useMapOptions } from "../../model/useMapOption";
-import bus_stop_icon from "../../assets/bus_stop_icon.svg";
+import useBusStopData from "../../../../entities/Bus/useBusStopClick";
 
 const Markers = () => {
   const [busStops, setBusAdd, setBusDelete] = useBusStop();
@@ -23,6 +23,28 @@ const Markers = () => {
   const [, setTestBus, ,] = useTestBus();
   const [, setOptionEvent] = useMapOptions();
   const map = useMap(); // 지도 객체 가져오기
+
+  const [retroBusStopData, setBusID, error] = useBusStopData(null);
+  const [busStopData, setBusStopData] = useState(null);
+
+  useEffect(() => {
+    if (!busStopData) return;
+    setBusID(busStopData.busStopId);
+  }, [busStopData]);
+
+  useEffect(() => {
+    if (retroBusStopData !== "" && retroBusStopData) {
+      handleMarkerClick(
+        busStopData,
+        map,
+        changePage,
+        setBus,
+        setTestBus,
+        setOptionEvent,
+        retroBusStopData.restTimeText
+      );
+    }
+  }, [retroBusStopData]);
 
   useEffect(() => {
     if (check.node) setNodeAdd(nodeLocation);
@@ -51,16 +73,9 @@ const Markers = () => {
         <Marker
           key={index}
           position={stopData.busPoint}
-          onClick={() =>
-            handleMarkerClick(
-              stopData,
-              map,
-              changePage,
-              setBus,
-              setTestBus,
-              setOptionEvent
-            )
-          }
+          onClick={() => {
+            setBusStopData(stopData);
+          }}
         />
       ))}
       {nodeData.map((data, index) => (

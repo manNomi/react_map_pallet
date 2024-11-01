@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 
-const getBusData = async () => {
+const getBusData = async (busStopId) => {
   try {
-    const response = await fetch("http://43.202.84.174:7700/bus/busStop/time", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: "test3",
-      }),
-    });
+    const response = await fetch(
+      "http://43.202.84.174:7700/bus/busStop/time?" + busStopId,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     const status = response.status;
 
     // 상태 코드에 따른 처리
@@ -23,7 +23,7 @@ const getBusData = async () => {
           console.log("중복임");
           break;
         default:
-          console.log("서버 오류 발생");
+          console.log(status, "서버 오류 발생");
       }
       return; // 에러 발생 시 이후 처리 중단
     }
@@ -36,25 +36,27 @@ const getBusData = async () => {
   }
 };
 
-const useBusStopData = (busStopId) => {
+const useBusStopData = () => {
   const [busData, setBusData] = useState({});
   const [error, setError] = useState(false);
+  const [busStopID, setBusStopID] = useState(null);
   const fetchData = async () => {
     try {
-      const busData = await getBusData(busStopId);
+      const busData = await getBusData(busStopID);
       setBusData(busData);
     } catch (error) {
       setError(true);
     }
   };
   useEffect(() => {
-    fetchData();
-    const initInterval = setInterval(() => {
+    console.log(busStopID);
+    if (busStopID && busStopID !== "") {
       fetchData();
-    }, 10000);
-    return () => clearInterval(initInterval);
-  }, []);
+      const interval = setInterval(fetchData, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [busStopID]);
 
-  return [busData, error];
+  return [busData, setBusStopID, error];
 };
 export default useBusStopData;

@@ -5,6 +5,9 @@ import useTestBus from "../../model/useTestBus";
 import useTestBusData from "../../../../entities/Bus/useTestBusData";
 import { useParams } from "react-router-dom";
 import greenBusIcon from "../../assets/green_bus.svg";
+import ReactDOMServer from "react-dom/server";
+import BusStopIcon from "../../assets/BusIcon";
+import BusStopIconLast from "../../assets/BusIconLast";
 
 const TestBusMarkers = () => {
   const [bus, setBus, resetBusData, moveBusEvent] = useTestBus();
@@ -51,7 +54,21 @@ const TestBusMarkers = () => {
             )
           }
           icon={{
-            content: `<img src="${greenBusIcon}" width="40px" height="40px" />`,
+            content: ReactDOMServer.renderToString(
+              closestBusLocation.lastbusyn ? (
+                <BusStopIconLast
+                  color={closestBusLocation.congestion}
+                  width={40}
+                  heigth={40}
+                />
+              ) : (
+                <BusStopIcon
+                  color={closestBusLocation.congestion}
+                  width={40}
+                  heigth={40}
+                />
+              )
+            ),
           }}
         />
       ) : (

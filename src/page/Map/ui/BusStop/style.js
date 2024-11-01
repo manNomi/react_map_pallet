@@ -62,6 +62,7 @@ export default {
   Value: styled.div`
     font-size: 14px;
     font-weight: bold;
+    text-align: center;
   `,
   ChatText: styled.p`
     font-weight: 900;

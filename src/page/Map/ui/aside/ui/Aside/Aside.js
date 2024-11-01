@@ -8,6 +8,7 @@ import useCheckAtom from "../../../../../../shared/recoil/useCheckAtom";
 import useAside from "../../model/useAside";
 import { useNavigate } from "react-router-dom";
 import TextBox from "../TextBox/CheckBox";
+import Explain from "../explain/explain";
 
 const Aside = () => {
   const [asideOpen, setAsideOpen] = useAside();
@@ -62,6 +63,7 @@ const Aside = () => {
           </div>
         )}
       </Style.Aside>
+      <Explain />
       {/* <SearchContainer /> */}
     </>
   );

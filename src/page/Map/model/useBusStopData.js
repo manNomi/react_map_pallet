@@ -3,7 +3,7 @@ import { useBusStopData } from "../../../entities/Bus/useBusStopClick";
 
 const useBusStop = () => {
   const [busStopData, setBusStop] = useState([]);
-  const [retroBusStopData, error] = useBusStopData();
+
   const setBusAdd = (busStop) => {
     setBusStop([...busStop]);
   };

@@ -3,8 +3,12 @@ import { Marker } from "react-naver-maps";
 import useBus from "../../model/useBus";
 import busIcon from "../../assets/bus.svg";
 import greenBusIcon from "../../assets/green_bus.svg";
+import yellowBusIcon from "../../assets/yeloow_bus.svg";
+import redBusIcon from "../../assets/red_bus.svg";
 import useBusData from "../../../../entities/Bus/useBusData";
 import { useParams } from "react-router-dom";
+import ReactDOMServer from "react-dom/server";
+import BusStopIcon from "../../assets/BusIcon";
 
 const BusMarkers = () => {
   // 버스 좌표 상태
@@ -17,7 +21,6 @@ const BusMarkers = () => {
 
   useEffect(() => {
     setIsBusDataUpdated(false); // 데이터 업데이트가 시작될 때 false로 초기화
-
     if (busData && busData.data) {
       setBus((prevBus) => {
         // 처음으로 데이터를 불러올 때 처리
@@ -95,7 +98,13 @@ const BusMarkers = () => {
             )
           }
           icon={{
-            content: `<img src="${greenBusIcon}" width="40px" height="40px" />`,
+            content: ReactDOMServer.renderToString(
+              <BusStopIcon
+                color={closestBusLocation.congestion}
+                width={20}
+                height={20}
+              />
+            ),
           }}
         />
       ) : (
