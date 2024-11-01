@@ -14,7 +14,7 @@ const Advertise = () => {
       <ins
         className="kakao_ad_area"
         style={{ display: "none" }}
-        data-ad-unit="DAN-aKjvCTxcncMIkLka"
+        data-ad-unit="DAN-aaXkzCMAsuXVnnta"
         data-ad-width="100%"
         data-ad-height="100%"></ins>
     </Style.Ad>

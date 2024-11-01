@@ -24,17 +24,26 @@ const Markers = () => {
   const [, setOptionEvent] = useMapOptions();
   const map = useMap(); // 지도 객체 가져오기
 
-  // 마커 클릭 핸들러: 네이버 API 사용하여 InfoWindow 생성
-
   useEffect(() => {
     if (check.node) setNodeAdd(nodeLocation);
     else setNodeDelete();
   }, [check.node]);
 
   useEffect(() => {
-    if (check.bus) setBusAdd(busStop);
-    else setBusDelete();
-  }, [check.bus]);
+    if (check.low) {
+      setBusAdd(busStop.filter((busStation) => busStation.lastNode < 36));
+    } else {
+      setBusDelete("하행");
+    }
+  }, [check.low, busStop]);
+
+  useEffect(() => {
+    if (check.high) {
+      setBusAdd(busStop.filter((busStation) => busStation.lastNode >= 36));
+    } else {
+      setBusDelete("상행");
+    }
+  }, [check.high, busStop]);
 
   return (
     <>

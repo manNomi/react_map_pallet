@@ -2,10 +2,15 @@ import { useEffect, useState } from "react";
 
 const getBusData = async () => {
   try {
-    const response = await fetch(
-      "http://43.202.84.174:7700/bus/info/station",
-      {}
-    );
+    const response = await fetch("http://43.202.84.174:7700/bus/busStop/time", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: "test3",
+      }),
+    });
     const status = response.status;
 
     // 상태 코드에 따른 처리
@@ -31,12 +36,12 @@ const getBusData = async () => {
   }
 };
 
-const useBusData = () => {
+const useBusStopData = (busStopId) => {
   const [busData, setBusData] = useState({});
   const [error, setError] = useState(false);
   const fetchData = async () => {
     try {
-      const busData = await getBusData();
+      const busData = await getBusData(busStopId);
       setBusData(busData);
     } catch (error) {
       setError(true);
@@ -52,4 +57,4 @@ const useBusData = () => {
 
   return [busData, error];
 };
-export default useBusData;
+export default useBusStopData;

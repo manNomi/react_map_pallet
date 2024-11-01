@@ -1,6 +1,6 @@
 // BusStop.js
 import Style from "./style";
-import { useEffect } from "react";
+
 const BusStop = ({
   stopName,
   location,
@@ -13,13 +13,6 @@ const BusStop = ({
 }) => {
   changePage(`/home/${stopData.lastNode}`);
 
-  // useEffect(() => {
-  //   setOptionEvent({
-  //     minZoom: 10,
-  //     maxZoom: 18,
-  //     center: { lat: stopData.lat, lng: stopData.lng },
-  //   });
-  // }, []);
   return (
     <Style.Container>
       <Style.Header>
@@ -33,7 +26,7 @@ const BusStop = ({
           <Style.Value>{remainingTime}분</Style.Value>
         </div>
         <div>
-          <Style.Label>버스 id</Style.Label>
+          <Style.Label>버스 정류장 id</Style.Label>
           <Style.Value>{busId}</Style.Value>
         </div>
       </Style.Info>

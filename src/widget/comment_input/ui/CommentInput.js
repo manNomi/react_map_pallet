@@ -38,12 +38,7 @@ const CommentInput = ({ onSendMessage }) => {
           placeholder="메시지 입력..."
           onKeyDown={handleKeyPress}
         />
-        <WriteBtn
-          onClick={() => {
-            handleClick();
-          }}>
-          전송
-        </WriteBtn>
+        <WriteBtn onClick={handleClick}>전송</WriteBtn>
       </Write>
     </Container>
   );

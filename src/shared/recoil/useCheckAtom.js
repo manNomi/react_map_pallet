@@ -3,7 +3,7 @@ import { useRecoilValue, useRecoilState } from "recoil";
 
 const checkAtom = atom({
   key: "CHECK",
-  default: { node: false, bus: true, test: false },
+  default: { node: false, bus: true, test: false, high: true, low: false },
 });
 
 const useCheckAtom = () => {

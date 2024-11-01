@@ -34,12 +34,7 @@ const LoginPage = () => {
       <Logo>511 BUSLIVE</Logo>
       <div>
         <Logo>카카오와 함께</Logo>
-        <MoveBtn
-          onClick={() => {
-            navigate("/home");
-          }}>
-          로그인 없이 이용
-        </MoveBtn>
+        {/* <MoveBtn onClick={() => {}}>로그인 없이 이용</MoveBtn> */}
         <LoginButton onClick={handleLogin}>카카오 로그인하기</LoginButton>
       </div>
     </Container>
