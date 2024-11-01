@@ -11,11 +11,8 @@ const BusStop = ({
   changePage,
   stopData,
 }) => {
-  console.log(stopData, "내림");
   changePage(`/home/${stopData.lastNode}`);
-  useEffect(() => {
-    console.log(remainingTime);
-  }, [remainingTime]);
+  useEffect(() => {}, [remainingTime]);
   return (
     <Style.Container>
       <Style.Header>

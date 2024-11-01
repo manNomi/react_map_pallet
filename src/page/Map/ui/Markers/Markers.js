@@ -41,7 +41,8 @@ const Markers = () => {
         setBus,
         setTestBus,
         setOptionEvent,
-        retroBusStopData.restTimeText
+        retroBusStopData.restTimeText,
+        setBusID
       );
     }
   }, [retroBusStopData]);

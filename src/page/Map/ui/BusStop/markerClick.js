@@ -9,11 +9,9 @@ const handleMarkerClick = (
   setBus,
   setTestBus,
   setOptionEvent,
-  busStopData
+  busStopData,
+  setBusID
 ) => {
-  console.log("핸들러", busStopData);
-  console.log(stopData);
-
   if (!busStopData) return;
   const coord = new window.naver.maps.LatLng(
     stopData.busPoint.lat,
@@ -43,6 +41,7 @@ const handleMarkerClick = (
         if (map.infoWindow) {
           map.infoWindow.setMap(null);
           changePage("/home");
+          setBusID("");
         }
       }}
     />

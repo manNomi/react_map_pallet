@@ -49,7 +49,6 @@ const useBusStopData = () => {
     }
   };
   useEffect(() => {
-    console.log(busStopID);
     if (busStopID && busStopID !== "") {
       fetchData();
       const interval = setInterval(fetchData, 10000);
