@@ -55,7 +55,7 @@ const TestBusMarkers = () => {
           }
           icon={{
             content: ReactDOMServer.renderToString(
-              closestBusLocation.lastbusyn ? (
+              closestBusLocation.lastbusyn === 1 ? (
                 <BusStopIconLast
                   color={closestBusLocation.congestion}
                   width={40}

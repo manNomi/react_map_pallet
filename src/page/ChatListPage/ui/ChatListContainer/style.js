@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import back_icon from "../../assets/back_icon.svg";
 
 export default {
   Container: styled.div`
@@ -33,5 +34,12 @@ export default {
     height: 100%;
     flex: 1;
     flex-grow: 1;
+  `,
+  BackBtn: styled.button`
+    width: 40px;
+    height: 40px;
+    background-image: url(${back_icon});
+    background-repeat: no-repeat;
+    background-size: cover;
   `,
 };

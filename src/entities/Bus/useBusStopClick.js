@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 const getBusData = async (busStopId) => {
   try {
     const response = await fetch(
-      "http://43.202.84.174:7700/bus/busStop/time?" + busStopId,
+      "http://43.202.84.174:7700/bus/busStop/time?busId=" + busStopId,
       {
         method: "GET",
         headers: {

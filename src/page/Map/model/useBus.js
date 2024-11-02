@@ -19,7 +19,7 @@ const useBus = () => {
   };
 
   const moveBusEvent = useCallback(() => {
-    const speed = 10; // 고정된 속도 (m/s)
+    const speed = 5; // 고정된 속도 (m/s)
 
     // 이미 interval이 실행 중이라면 새로 설정하지 않음
     if (intervalRef.current) return;

@@ -7,6 +7,10 @@ const ChatListContainer = () => {
   return (
     <Style.Container>
       <Style.Header>
+        <Style.BackBtn
+          onClick={() => {
+            pageChange("/home");
+          }}></Style.BackBtn>
         <Style.Logo>목록</Style.Logo>
         <Style.Title>511번 채팅방</Style.Title>
       </Style.Header>

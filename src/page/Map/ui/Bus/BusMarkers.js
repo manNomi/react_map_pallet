@@ -9,6 +9,7 @@ import useBusData from "../../../../entities/Bus/useBusData";
 import { useParams } from "react-router-dom";
 import ReactDOMServer from "react-dom/server";
 import BusStopIcon from "../../assets/BusIcon";
+import BusStopIconLast from "../../assets/BusIconLast";
 
 const BusMarkers = () => {
   // 버스 좌표 상태
@@ -20,6 +21,7 @@ const BusMarkers = () => {
   const [isBusDataUpdated, setIsBusDataUpdated] = useState(false);
 
   useEffect(() => {
+    console.log(busData);
     setIsBusDataUpdated(false); // 데이터 업데이트가 시작될 때 false로 초기화
     if (busData && busData.data) {
       setBus((prevBus) => {
@@ -99,11 +101,19 @@ const BusMarkers = () => {
           }
           icon={{
             content: ReactDOMServer.renderToString(
-              <BusStopIcon
-                color={closestBusLocation.congestion}
-                width={20}
-                height={20}
-              />
+              closestBusLocation.lastbusyn === 1 ? (
+                <BusStopIconLast
+                  color={closestBusLocation.congestion}
+                  width={40}
+                  heigth={40}
+                />
+              ) : (
+                <BusStopIcon
+                  color={closestBusLocation.congestion}
+                  width={40}
+                  heigth={40}
+                />
+              )
             ),
           }}
         />
