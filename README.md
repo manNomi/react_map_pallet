@@ -6,6 +6,11 @@ example for the openSource
 -> live bus project for 511 in incheon
 http://www.mannomi.store
 
+![alt text](image.png)
+![alt text](image-1.png)
+![alt text](ex.gif)
+![alt text](ex2.gif)
+
 `react_map_pallet` is an intuitive, easy-to-use React component library for handling multiple map integrations within a single project. It supports popular mapping services like Google Maps, Naver Maps, Kakao Maps, and OpenLayers, allowing developers to seamlessly switch between them and add custom markers, event listeners, and sync map states such as center and zoom.
 
 This library is ideal for developers who require flexible mapping capabilities in their React projects and want to handle cross-platform mapping services in a unified manner.
