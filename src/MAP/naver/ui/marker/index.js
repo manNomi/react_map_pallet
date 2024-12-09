@@ -1,32 +1,47 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+import { getNaverMapInstance } from "../map";
 
 const NaverMarker = ({ position, children, onClick }) => {
-  const mapId = "naver-map-id";
+  const [map, setMap] = useState(null);
+
   useEffect(() => {
+    const initMap = async () => {
+      try {
+        const naverMap = await getNaverMapInstance();
+        if (!naverMap) {
+          console.error("Naver Map instance could not be retrieved.");
+          return;
+        }
+        setMap(naverMap);
+      } catch (error) {
+        console.error("Failed to initialize Naver Map:", error);
+      }
+    };
+
+    initMap();
+  }, []);
+
+  useEffect(() => {
+    if (!map) {
+      console.log("Naver Maps API가 로드되지 않았거나 맵 인스턴스가 없습니다.");
+      return;
+    }
+
     const { naver } = window;
-    if (!naver) {
-      console.warn("Naver Maps API가 로드되지 않았습니다.");
+
+    if (!position || !position.lat || !position.lng) {
+      console.error("Invalid position:", position);
       return;
     }
-
-    const mapElement = document.getElementById(mapId);
-    if (!mapElement) {
-      console.warn("Map element를 찾을 수 없습니다.");
-      return;
-    }
-
-    // 지도 초기화
-    const mapInstance = new naver.maps.Map(mapElement, {
-      center: new naver.maps.LatLng(position.lat, position.lng),
-      zoom: 15,
-    });
 
     // Marker DOM 생성
     const markerElement = document.createElement("div");
     markerElement.style.position = "absolute";
     markerElement.style.width = "50px";
     markerElement.style.height = "50px";
+    markerElement.style.backgroundColor = "red"; // 디버깅을 위한 스타일
+    markerElement.style.borderRadius = "50%"; // 원형 스타일
 
     // React 컴포넌트를 Marker DOM에 렌더링
     ReactDOM.render(
@@ -38,23 +53,24 @@ const NaverMarker = ({ position, children, onClick }) => {
 
     const marker = new naver.maps.Marker({
       position: new naver.maps.LatLng(position.lat, position.lng),
-      map: mapInstance,
+      map,
       icon: {
         content: markerElement,
       },
     });
 
-    // 클릭 이벤트 추가
-    naver.maps.Event.addListener(marker, "click", () => {
-      if (onClick) onClick();
-    });
+    console.log("Marker created:", marker);
 
-    // 컴포넌트 언마운트 시 마커 제거
+    // 클릭 이벤트 추가
+    if (onClick) {
+      naver.maps.Event.addListener(marker, "click", () => onClick());
+    }
+
     return () => {
       marker.setMap(null); // 지도에서 마커 제거
       ReactDOM.unmountComponentAtNode(markerElement); // React 컴포넌트 언마운트
     };
-  }, [mapId, position, children, onClick]);
+  }, [map, position, children, onClick]);
 
   return null;
 };

@@ -8,22 +8,22 @@ const naverClientId = process.env.REACT_APP_NAVER_CLIENT_ID;
 const kakaoClientId = process.env.REACT_APP_KAKAO_CLIENT_ID;
 const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
-// // 렌더링
-// ReactDOM.createRoot(document.getElementById("root")).render(
-//   <RecoilRoot>
-//     <MapContainer
-//       mapType={"naver"}
-//       naver={naverClientId}
-//       kakao={kakaoClientId}
-//       google={googleClientId}
-//       openLayer={true}
-//     />
-//   </RecoilRoot>
-// );
-
 // 렌더링
 ReactDOM.createRoot(document.getElementById("root")).render(
   <RecoilRoot>
-    <App />
+    <MapContainer
+      mapType={"kakao"}
+      naver={naverClientId}
+      kakao={kakaoClientId}
+      // google={googleClientId}
+      openLayer={true}
+    />
   </RecoilRoot>
 );
+
+// // 렌더링
+// ReactDOM.createRoot(document.getElementById("root")).render(
+//   <RecoilRoot>
+//     <App />
+//   </RecoilRoot>
+// );

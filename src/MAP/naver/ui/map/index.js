@@ -5,68 +5,61 @@ import {
   NavermapsProvider,
 } from "react-naver-maps";
 
+let naverMapInstance = null; // Naver Map 인스턴스를 저장
+let mapResolver = null; // Naver Map 초기화 대기를 위한 Resolver
+
+export const getNaverMapInstance = () =>
+  new Promise((resolve) => {
+    if (naverMapInstance) {
+      resolve(naverMapInstance); // 이미 초기화된 경우 즉시 반환
+    } else {
+      mapResolver = resolve; // 초기화가 완료되면 resolve 호출
+    }
+  });
+
 const NaverMapDiv = ({ api_key, center, zoom, setSyncState }) => {
-  const mapRef = useRef(null); // React ref로 지도 접근
+  const mapRef = useRef(null); // Map 컨테이너 참조
+
+  const handleMapInit = (naverMap) => {
+    naverMapInstance = naverMap; // Naver Map 인스턴스를 전역 변수에 저장
+    if (mapResolver) {
+      mapResolver(naverMap); // 초기화 대기 중인 Promise resolve
+      mapResolver = null;
+    }
+  };
+
+  const handleCenterChanged = (newCenter) => {
+    setSyncState((prevState) => ({
+      ...prevState,
+      center: { lat: newCenter.lat(), lng: newCenter.lng() },
+    }));
+  };
+
+  const handleZoomChanged = (newZoom) => {
+    setSyncState((prevState) => ({
+      ...prevState,
+      zoom: newZoom,
+    }));
+  };
 
   useEffect(() => {
-    const { naver } = window;
-
-    if (mapRef.current && naver) {
-      const mapInstance = new naver.maps.Map(mapRef.current, {
-        center: new naver.maps.LatLng(center.lat, center.lng),
-        zoom,
-      });
-
-      // 중심 변경 핸들러
-      const handleCenterChanged = () => {
-        const newCenter = mapInstance.getCenter();
-        setSyncState((prevState) => ({
-          ...prevState,
-          center: { lat: newCenter.lat(), lng: newCenter.lng() },
-        }));
-      };
-
-      // 줌 변경 핸들러
-      const handleZoomChanged = () => {
-        const newZoom = mapInstance.getZoom();
-        setSyncState((prevState) => ({
-          ...prevState,
-          zoom: newZoom,
-        }));
-      };
-
-      naver.maps.Event.addListener(
-        mapInstance,
-        "center_changed",
-        handleCenterChanged
-      );
-      naver.maps.Event.addListener(
-        mapInstance,
-        "zoom_changed",
-        handleZoomChanged
-      );
-
-      // Clean-up 이벤트 리스너
-      return () => {
-        naver.maps.Event.removeListener(
-          mapInstance,
-          "center_changed",
-          handleCenterChanged
-        );
-        naver.maps.Event.removeListener(
-          mapInstance,
-          "zoom_changed",
-          handleZoomChanged
-        );
-        mapInstance.destroy();
-      };
+    if (mapRef.current) {
+      mapRef.current.setCenter(center);
+      mapRef.current.setZoom(zoom);
     }
-  }, [center, zoom, setSyncState]);
+  }, [center, zoom]);
 
   return (
     <NavermapsProvider ncpClientId={api_key}>
-      <MapDiv ref={mapRef} style={{ width: "100%", height: "100%" }}>
-        <NaverMap />
+      <MapDiv style={{ width: "100%", height: "100%" }}>
+        <NaverMap
+          ref={mapRef}
+          center={center}
+          zoom={zoom}
+          onInit={handleMapInit}
+          onCenterChanged={(center) => handleCenterChanged(center)}
+          onZoomChanged={(zoom) => handleZoomChanged(zoom)}
+        />
       </MapDiv>
     </NavermapsProvider>
   );

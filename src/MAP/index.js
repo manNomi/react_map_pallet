@@ -38,7 +38,7 @@ const MapContainer = ({
         style={{
           ...baseStyle,
           zIndex: mapType === type ? 0 : 1,
-          opacity: mapType === type ? 1 : 0,
+          opacity: mapType === type ? 0.5 : 0.5,
           pointerEvents: mapType === type ? "auto" : "none",
         }}>
         <Component

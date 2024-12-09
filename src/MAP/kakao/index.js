@@ -42,6 +42,7 @@ const KakaoMapComponent = ({ api_key, syncState, setSyncState }) => {
 
     const handleCenterChange = () => {
       const center = kakaoMapRef.current.getCenter();
+      console.log(center);
       setSyncState((prev) => ({
         ...prev,
         center: { lat: center.getLat(), lng: center.getLng() },
