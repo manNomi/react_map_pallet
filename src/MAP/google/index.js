@@ -1,21 +1,45 @@
-import React, { useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
-import { compose } from "ol/transform";
-let googleMapInstance = null;
-let mapResolver = null; // 전역 변수로 추가
+
+let googleMapInstance = null; // 전역 변수로 Google Map 인스턴스 저장
+let mapResolver = null; // Google Map 초기화 대기를 위한 Resolver
+
 const GoogleMapComponent = ({ api_key, syncState, setSyncState }) => {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: api_key,
   });
 
+  const mapRef = useRef(null); // Google Map 인스턴스를 저장
+  const [isListenersAttached, setAttach] = useState(false); // 이벤트 리스너가 부착되었는지 여부
+
   const roundCoord = (value, precision = 6) => {
     return parseFloat(value.toFixed(precision));
   };
 
-  useEffect(() => {
-    if (!googleMapInstance) return;
+  // 지도 중심 및 줌 변경
+  // useEffect(() => {
+  //   if (mapRef.current) {
+  //     const map = mapRef.current;
 
-    const map = googleMapInstance;
+  //     if (syncState.center) {
+  //       const newCenter = new window.google.maps.LatLng(
+  //         syncState.center.lat,
+  //         syncState.center.lng
+  //       );
+  //       map.setCenter(newCenter);
+  //     }
+  //     if (syncState.zoom) {
+  //       map.setZoom(syncState.zoom);
+  //     }
+  //   }
+  // }, [syncState]);
+
+  // 이벤트 리스너 등록 및 관리
+  useEffect(() => {
+    if (!mapRef.current || isListenersAttached) return;
+
+    const map = mapRef.current;
+    console.log(map);
 
     const handleCenterChanged = () => {
       const center = map.getCenter();
@@ -36,27 +60,24 @@ const GoogleMapComponent = ({ api_key, syncState, setSyncState }) => {
       }));
     };
 
-    // 이벤트 리스너 등록
-    const centerChangedListener = map.addListener(
+    const centerListener = map.addListener(
       "center_changed",
       handleCenterChanged
     );
-    const zoomChangedListener = map.addListener(
-      "zoom_changed",
-      handleZoomChanged
-    );
+    const zoomListener = map.addListener("zoom_changed", handleZoomChanged);
 
     // 클린업: 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-      centerChangedListener.remove();
-      zoomChangedListener.remove();
+      centerListener.remove();
+      zoomListener.remove();
     };
-  }, [setSyncState]);
+  }, [setSyncState, isListenersAttached]);
 
   const handleMapLoad = (map) => {
     googleMapInstance = map; // 전역 변수에 저장
+    mapRef.current = map; // useRef에 저장
+    setAttach(true);
 
-    // mapResolver가 있다면 resolve 호출
     if (mapResolver) {
       mapResolver(map);
       mapResolver = null; // 초기화
@@ -80,14 +101,12 @@ const GoogleMapComponent = ({ api_key, syncState, setSyncState }) => {
 };
 
 export const getGoogleMapInstance = async () => {
-  // 이미 인스턴스가 존재하면 즉시 반환
   if (googleMapInstance) {
     return googleMapInstance;
   }
 
-  // 인스턴스가 아직 없다면 Promise를 통해 대기
   return new Promise((resolve) => {
-    mapResolver = resolve; // mapResolver에 resolve 할당
+    mapResolver = resolve;
   });
 };
 
