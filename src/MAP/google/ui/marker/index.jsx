@@ -19,11 +19,6 @@ const GoogleMarker = ({ position, children, onClick }) => {
   }, []);
 
   useEffect(() => {
-    if (!map) {
-      console.log("Google Map instance is not available.");
-      return;
-    }
-
     // 마커 DOM 생성
     const markerElement = document.createElement("div");
     markerElement.style.position = "absolute";

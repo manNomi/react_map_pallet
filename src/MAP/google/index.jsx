@@ -39,7 +39,6 @@ const GoogleMapComponent = ({ api_key, syncState, setSyncState }) => {
     if (!mapRef.current || isListenersAttached) return;
 
     const map = mapRef.current;
-    console.log(map);
 
     const handleCenterChanged = () => {
       const center = map.getCenter();

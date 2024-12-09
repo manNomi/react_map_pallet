@@ -55,7 +55,6 @@ const MapContainer = ({
       if (!React.isValidElement(child)) return null;
 
       const { mapType: childMapType } = child.props;
-      console.log(childMapType);
       const apiKey = maps.find(({ type }) => type === childMapType)?.api;
 
       // OpenLayers의 경우 API 키 없이 렌더링 허용

@@ -6,7 +6,7 @@ import KakaoMarker from "./MAP/kakao/ui/marker";
 import OLMarker from "./MAP/OLMap/ui/marker";
 
 const App = () => {
-  const [mapType, setMapType] = useState("google");
+  const [mapType, setMapType] = useState("naver");
 
   const handleMarkerClick = (message) => {
     alert(message);
@@ -65,7 +65,7 @@ const App = () => {
         </NaverMarker>
 
         {/* Kakao Marker */}
-        <KakaoMarker
+        {/* <KakaoMarker
           position={{ lat: 37.5665, lng: 126.978 }}
           onClick={() => handleMarkerClick("Kakao Marker 클릭!")}>
           <div
@@ -77,7 +77,7 @@ const App = () => {
             }}>
             K
           </div>
-        </KakaoMarker>
+        </KakaoMarker> */}
 
         {/* OpenLayers Marker */}
         <OLMarker

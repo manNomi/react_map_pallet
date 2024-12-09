@@ -24,7 +24,6 @@ const NaverMarker = ({ position, children, onClick }) => {
 
   useEffect(() => {
     if (!map) {
-      console.log("Naver Maps API가 로드되지 않았거나 맵 인스턴스가 없습니다.");
       return;
     }
 
@@ -50,7 +49,6 @@ const NaverMarker = ({ position, children, onClick }) => {
       }),
       markerElement
     );
-
     const marker = new naver.maps.Marker({
       position: new naver.maps.LatLng(position.lat, position.lng),
       map,
@@ -59,8 +57,9 @@ const NaverMarker = ({ position, children, onClick }) => {
       },
     });
 
-    console.log("Marker created:", marker);
-
+    if (map && marker) {
+      marker.setMap(map);
+    }
     // 클릭 이벤트 추가
     if (onClick) {
       naver.maps.Event.addListener(marker, "click", () => onClick());
