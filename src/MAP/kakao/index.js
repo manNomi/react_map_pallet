@@ -1,8 +1,11 @@
 import React, { useEffect, useRef } from "react";
 
-const KakaoMapDiv = ({ center, zoom, apiKey, zIndex, opacity }) => {
+const KakaoMapDiv = ({ syncState, apiKey, zIndex, opacity }) => {
   const mapRef = useRef(null);
 
+  useEffect(() => {
+    console.log(syncState);
+  }, [syncState]);
   // Zoom 변환 함수
   // const zoomToLevel = (zoom) => 20 - zoom; // 일반 Zoom → Kakao Level
   // const levelToZoom = (level) => 20 - level; // Kakao Level → 일반 Zoom
@@ -16,8 +19,11 @@ const KakaoMapDiv = ({ center, zoom, apiKey, zIndex, opacity }) => {
       window.kakao.maps.load(() => {
         const container = document.getElementById("kakao-map");
         const options = {
-          center: new window.kakao.maps.LatLng(center.lat, center.lng),
-          level: zoom, // 초기 Zoom → Level 변환
+          center: new window.kakao.maps.LatLng(
+            syncState.center.lat,
+            syncState.center.lng
+          ),
+          level: syncState.zoom, // 초기 Zoom → Level 변환
         };
 
         // Kakao Map 생성 및 참조 저장
@@ -43,10 +49,12 @@ const KakaoMapDiv = ({ center, zoom, apiKey, zIndex, opacity }) => {
   useEffect(() => {
     if (mapRef.current) {
       const map = mapRef.current;
-      map.setCenter(new window.kakao.maps.LatLng(center.lat, center.lng));
-      map.setLevel(zoom); // Zoom 값을 Kakao Level로 변환
+      map.setCenter(
+        new window.kakao.maps.LatLng(syncState.center.lat, syncState.center.lng)
+      );
+      map.setLevel(syncState.zoom); // Zoom 값을 Kakao Level로 변환
     }
-  }, [center, zoom]);
+  }, [syncState]);
 
   return (
     <div

@@ -1,26 +1,50 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 
-const GoogleMapComponent = ({ google, syncState, setSyncState }) => {
+const GoogleMapComponent = ({ api_key, syncState, setSyncState }) => {
   const googleMapRef = useRef(null);
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: google,
+    googleMapsApiKey: api_key,
   });
 
-  const addGoogleListeners = (map) => {
-    map.addListener("center_changed", () => {
+  const roundCoord = (value, precision = 6) => {
+    return parseFloat(value.toFixed(precision));
+  };
+
+  useEffect(() => {
+    const map = googleMapRef.current;
+
+    if (!map) return;
+
+    const handleCenterChanged = () => {
       const center = map.getCenter();
       setSyncState((prev) => ({
         ...prev,
-        center: { lat: center.lat(), lng: center.lng() },
+        center: {
+          lat: roundCoord(center.lat(), 6),
+          lng: roundCoord(center.lng(), 6),
+        },
       }));
-    });
+    };
 
-    map.addListener("zoom_changed", () => {
-      setSyncState((prev) => ({ ...prev, zoom: map.getZoom() }));
-    });
-  };
+    const handleZoomChanged = () => {
+      setSyncState((prev) => ({
+        ...prev,
+        zoom: map.getZoom(),
+      }));
+    };
+
+    // 이벤트 리스너 등록
+    map.addListener("center_changed", handleCenterChanged);
+    map.addListener("zoom_changed", handleZoomChanged);
+
+    // 클린업: 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      map.clearListeners(map, "center_changed");
+      map.clearListeners(map, "zoom_changed");
+    };
+  }, [setSyncState]);
 
   return (
     isLoaded && (
@@ -34,7 +58,6 @@ const GoogleMapComponent = ({ google, syncState, setSyncState }) => {
         }}
         onLoad={(map) => {
           googleMapRef.current = map;
-          addGoogleListeners(map);
         }}
       />
     )

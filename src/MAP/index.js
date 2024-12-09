@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GoogleMapComponent from "./AnotherMap/GoogleMapComponent";
 import NaverMapComponent from "./AnotherMap/NaverMapComponent";
 import KakaoMapComponent from "./AnotherMap/KakaoMapComponent";
 import OpenLayersComponent from "./AnotherMap/OpenLayersComponent";
 
-const MapContainer = ({ mapType, google, naver, kakao }) => {
+const MapContainer = ({ mapType, google, naver, kakao, openLayer }) => {
   const [syncState, setSyncState] = useState({
     center: { lat: 37.5665, lng: 126.978 }, // 중심 좌표 (서울 시청)
     zoom: 15, // 줌 레벨
   });
-
+  // useEffect(() => {
+  //   console.log(syncState);
+  // }, [syncState]);
   // 지도 렌더링 함수
   const renderMap = (type, Component, apiKey, zIndex) => {
     // 지도 렌더링 조건: API 키가 있어야 하고 `Component`가 존재해야 함
@@ -19,9 +21,9 @@ const MapContainer = ({ mapType, google, naver, kakao }) => {
         style={{
           position: "absolute",
           width: "100%",
-          height: "100%",
-          zIndex,
-          opacity: mapType === type ? 1 : 0, // 배경 지도만 보이도록 설정
+          height: "100vh",
+          zIndex: zIndex,
+          opacity: mapType === type ? 0.5 : 0.5, // 배경 지도만 보이도록 설정
           pointerEvents: mapType === type ? "auto" : "none", // 배경 지도만 상호작용 가능
         }}>
         <Component
@@ -34,13 +36,13 @@ const MapContainer = ({ mapType, google, naver, kakao }) => {
   };
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+    <div style={{ position: "relative", width: "100%", height: "100vh" }}>
       {/* 배경 지도 (mapType에 따라 선택) */}
       {mapType === "google" &&
         renderMap("google", GoogleMapComponent, google, 0)}
       {mapType === "naver" && renderMap("naver", NaverMapComponent, naver, 0)}
       {mapType === "kakao" && renderMap("kakao", KakaoMapComponent, kakao, 0)}
-      {mapType === "openlayers" && (
+      {mapType === "openLayer" && openLayer && (
         <OpenLayersComponent
           syncState={syncState}
           setSyncState={setSyncState}
@@ -59,6 +61,20 @@ const MapContainer = ({ mapType, google, naver, kakao }) => {
         renderMap("google", GoogleMapComponent, google, 1)}
       {mapType !== "naver" && renderMap("naver", NaverMapComponent, naver, 1)}
       {mapType !== "kakao" && renderMap("kakao", KakaoMapComponent, kakao, 1)}
+      {openLayer && mapType !== "openLayer" && (
+        <OpenLayersComponent
+          syncState={syncState}
+          setSyncState={setSyncState}
+          style={{
+            pointerEvents: "none",
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            zIndex: 1,
+            opacity: 0,
+          }}
+        />
+      )}
     </div>
   );
 };

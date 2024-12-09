@@ -14,6 +14,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       mapType={"kakao"}
       naver={naverClientId}
       kakao={kakaoClientId}
+      google={googleClientId}
+      openLayer={true}
     />
   </RecoilRoot>
 );
