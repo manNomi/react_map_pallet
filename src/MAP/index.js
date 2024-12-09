@@ -1,30 +1,45 @@
 import React, { useEffect, useState } from "react";
-import GoogleMapComponent from "./AnotherMap/GoogleMapComponent";
-import NaverMapComponent from "./AnotherMap/NaverMapComponent";
-import KakaoMapComponent from "./AnotherMap/KakaoMapComponent";
-import OpenLayersComponent from "./AnotherMap/OpenLayersComponent";
+import GoogleMapComponent from "./google";
+import NaverMapComponent from "./naver";
+import KakaoMapComponent from "./kakao";
+import OpenLayersComponent from "./OLMap";
 
-const MapContainer = ({ mapType, google, naver, kakao, openLayer }) => {
+const MapContainer = ({
+  mapType,
+  google,
+  naver,
+  kakao,
+  openLayer,
+  children,
+}) => {
   const [syncState, setSyncState] = useState({
-    center: { lat: 37.5665, lng: 126.978 }, // 중심 좌표 (서울 시청)
-    zoom: 15, // 줌 레벨
+    center: { lat: 37.5665, lng: 126.978 }, // 기본 중심 좌표
+    zoom: 15, // 기본 줌 레벨
   });
-  // useEffect(() => {
-  //   console.log(syncState);
-  // }, [syncState]);
-  // 지도 렌더링 함수
-  const renderMap = (type, Component, apiKey, zIndex) => {
-    // 지도 렌더링 조건: API 키가 있어야 하고 `Component`가 존재해야 함
-    if (!apiKey || !Component) return null;
+
+  // 지도 스타일 상수
+  const baseStyle = {
+    position: "absolute",
+    width: "100%",
+    height: "100vh",
+  };
+
+  const maps = [
+    { type: "google", component: GoogleMapComponent, api: google },
+    { type: "naver", component: NaverMapComponent, api: naver },
+    { type: "kakao", component: KakaoMapComponent, api: kakao },
+  ];
+
+  const renderMap = (type, Component, apiKey) => {
+    if (type !== "openLayer" && (!apiKey || !Component)) return null;
+
     return (
       <div
         style={{
-          position: "absolute",
-          width: "100%",
-          height: "100vh",
-          zIndex: zIndex,
-          opacity: mapType === type ? 0.5 : 0.5, // 배경 지도만 보이도록 설정
-          pointerEvents: mapType === type ? "auto" : "none", // 배경 지도만 상호작용 가능
+          ...baseStyle,
+          zIndex: mapType === type ? 0 : 1,
+          opacity: mapType === type ? 1 : 0,
+          pointerEvents: mapType === type ? "auto" : "none",
         }}>
         <Component
           api_key={apiKey}
@@ -35,46 +50,42 @@ const MapContainer = ({ mapType, google, naver, kakao, openLayer }) => {
     );
   };
 
+  const renderMarkers = () =>
+    React.Children.map(children, (child) => {
+      if (!React.isValidElement(child)) return null;
+
+      const { mapType: childMapType } = child.props;
+      console.log(childMapType);
+      const apiKey = maps.find(({ type }) => type === childMapType)?.api;
+
+      // OpenLayers의 경우 API 키 없이 렌더링 허용
+      if (!apiKey && childMapType !== "openLayer") {
+        console.warn(`API key for ${childMapType} map is not provided.`);
+        return null;
+      }
+
+      return React.cloneElement(child, { syncState });
+    });
+
   return (
     <div style={{ position: "relative", width: "100%", height: "100vh" }}>
-      {/* 배경 지도 (mapType에 따라 선택) */}
-      {mapType === "google" &&
-        renderMap("google", GoogleMapComponent, google, 0)}
-      {mapType === "naver" && renderMap("naver", NaverMapComponent, naver, 0)}
-      {mapType === "kakao" && renderMap("kakao", KakaoMapComponent, kakao, 0)}
-      {mapType === "openLayer" && openLayer && (
+      {/* 지도 렌더링 */}
+      {maps.map(({ type, component, api }) => renderMap(type, component, api))}
+      {openLayer && (
         <OpenLayersComponent
           syncState={syncState}
           setSyncState={setSyncState}
           style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            zIndex: 0,
-            opacity: 1,
+            ...baseStyle,
+            zIndex: mapType === "openLayer" ? 0 : 1,
+            pointerEvents: mapType === "openLayer" ? "auto" : "none",
+            opacity: mapType === "openLayer" ? 1 : 0,
           }}
         />
       )}
 
-      {/* 다른 지도 (투명 처리) */}
-      {mapType !== "google" &&
-        renderMap("google", GoogleMapComponent, google, 1)}
-      {mapType !== "naver" && renderMap("naver", NaverMapComponent, naver, 1)}
-      {mapType !== "kakao" && renderMap("kakao", KakaoMapComponent, kakao, 1)}
-      {openLayer && mapType !== "openLayer" && (
-        <OpenLayersComponent
-          syncState={syncState}
-          setSyncState={setSyncState}
-          style={{
-            pointerEvents: "none",
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            zIndex: 1,
-            opacity: 0,
-          }}
-        />
-      )}
+      {/* 마커 렌더링 */}
+      {renderMarkers()}
     </div>
   );
 };

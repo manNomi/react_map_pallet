@@ -1,79 +1,93 @@
 import React, { useEffect, useRef } from "react";
 
-const KakaoMapDiv = ({ syncState, apiKey, zIndex, opacity }) => {
-  const mapRef = useRef(null);
+const KakaoMapComponent = ({ api_key, syncState, setSyncState }) => {
+  const kakaoMapRef = useRef(null);
 
   useEffect(() => {
-    console.log(syncState);
-  }, [syncState]);
-  // Zoom 변환 함수
-  // const zoomToLevel = (zoom) => 20 - zoom; // 일반 Zoom → Kakao Level
-  // const levelToZoom = (level) => 20 - level; // Kakao Level → 일반 Zoom
+    const existingScript = document.querySelector(
+      `script[src="https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${api_key}"]`
+    );
 
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${apiKey}`;
-    script.async = true;
+    if (!existingScript) {
+      const script = document.createElement("script");
+      script.src = `https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${api_key}`;
+      script.async = true;
 
-    script.onload = () => {
-      window.kakao.maps.load(() => {
-        const container = document.getElementById("kakao-map");
-        const options = {
-          center: new window.kakao.maps.LatLng(
-            syncState.center.lat,
-            syncState.center.lng
-          ),
-          level: syncState.zoom, // 초기 Zoom → Level 변환
-        };
+      script.onload = () => {
+        window.kakao.maps.load(initMap);
+      };
 
-        // Kakao Map 생성 및 참조 저장
-        const map = new window.kakao.maps.Map(container, options);
-        mapRef.current = map;
-      });
-    };
+      document.body.appendChild(script);
 
-    document.body.appendChild(script);
+      return () => {
+        document.body.removeChild(script);
+      };
+    } else if (window.kakao && window.kakao.maps) {
+      window.kakao.maps.load(initMap);
+    }
+  }, [api_key]);
+
+  const initMap = () => {
     const container = document.getElementById("kakao-map");
-    container.style.zIndex = zIndex;
-
-    // 스크립트 및 맵 클린업
-    return () => {
-      document.body.removeChild(script);
-      if (mapRef.current) {
-        mapRef.current = null;
-      }
+    const options = {
+      center: new window.kakao.maps.LatLng(
+        syncState.center.lat,
+        syncState.center.lng
+      ),
+      level: zoomToLevel(syncState.zoom),
     };
-  }, []);
 
-  // 초기 중심 좌표 및 줌 강제 동기화
+    const map = new window.kakao.maps.Map(container, options);
+    kakaoMapRef.current = map;
+
+    const handleCenterChange = () => {
+      const center = kakaoMapRef.current.getCenter();
+      setSyncState((prev) => ({
+        ...prev,
+        center: { lat: center.getLat(), lng: center.getLng() },
+      }));
+    };
+
+    const handleZoomChange = () => {
+      const level = map.getLevel();
+      setSyncState((prev) => ({ ...prev, zoom: levelToZoom(level) }));
+    };
+
+    window.kakao.maps.event.addListener(
+      map,
+      "bounds_changed",
+      handleCenterChange
+    );
+    window.kakao.maps.event.addListener(map, "zoom_changed", handleZoomChange);
+
+    return () => {
+      window.kakao.maps.event.removeListener(
+        map,
+        "center_changed",
+        handleCenterChange
+      );
+      window.kakao.maps.event.removeListener(
+        map,
+        "zoom_changed",
+        handleZoomChange
+      );
+    };
+  };
+
+  const zoomToLevel = (zoom) => 20 - zoom;
+  const levelToZoom = (level) => 20 - level;
+
   useEffect(() => {
-    if (mapRef.current) {
-      const map = mapRef.current;
+    if (kakaoMapRef.current) {
+      const map = kakaoMapRef.current;
       map.setCenter(
         new window.kakao.maps.LatLng(syncState.center.lat, syncState.center.lng)
       );
-      map.setLevel(syncState.zoom); // Zoom 값을 Kakao Level로 변환
+      map.setLevel(zoomToLevel(syncState.zoom));
     }
   }, [syncState]);
 
-  return (
-    <div
-      style={{
-        width: "100%",
-        height: "100vh",
-        position: "relative",
-      }}>
-      {/* Kakao Map 컨테이너 */}
-      <div
-        id="kakao-map"
-        style={{
-          width: "100%",
-          height: "100%",
-          zIndex: zIndex,
-          opacity: opacity,
-        }}></div>
-    </div>
-  );
+  return <div id="kakao-map" style={{ width: "100%", height: "100vh" }} />;
 };
 
-export default KakaoMapDiv;
+export default KakaoMapComponent;
