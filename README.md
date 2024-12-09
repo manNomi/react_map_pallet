@@ -1,70 +1,181 @@
-# Getting Started with Create React App
+# react_map_pallet
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Description
 
-## Available Scripts
+`react_map_pallet` is an intuitive, easy-to-use React component library for handling multiple map integrations within a single project. It supports popular mapping services like Google Maps, Naver Maps, Kakao Maps, and OpenLayers, allowing developers to seamlessly switch between them and add custom markers, event listeners, and sync map states such as center and zoom.
 
-In the project directory, you can run:
+This library is ideal for developers who require flexible mapping capabilities in their React projects and want to handle cross-platform mapping services in a unified manner.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Multi-map Integration**: Supports Google Maps, Naver Maps, Kakao Maps, and OpenLayers.
+- **Dynamic Marker Handling**: Add customizable markers to maps, including event callbacks (e.g., `onClick`).
+- **State Sync**: Keeps map center and zoom synchronized across different map platforms.
+- **OpenLayers for Free Open Source Mapping**: Fully customizable and does not require an API key.
+- **Lightweight and Modular**: Only imports the specific map platform you need.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Installation
 
-### `npm run build`
+You can install the package using npm:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+````bash
+npm install react_map_pallet
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+or with yarn:
+yarn add react_map_pallet
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Usage
 
-### `npm run eject`
+Here’s a detailed guide to setting up and using react_map_pallet:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. Import Required Components
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```javascript
+import { MapContainer, GoogleMapComponent, NaverMapComponent, KakaoMapComponent } from 'react_map_pallet';
+import GoogleMarker from 'react_map_pallet/google/ui/marker';
+import NaverMarker from 'react_map_pallet/naver/ui/marker';
+import KakaoMarker from 'react_map_pallet/kakao/ui/marker';
+import { useState } from 'react';
+````
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2. Setup Your Component
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```javascript
+const App = () => {
+  const [mapType, setMapType] = useState("google"); // Switch between map types
+  const [syncState, setSyncState] = useState({
+    center: { lat: 37.5665, lng: 126.978 }, // Default center (Seoul)
+    zoom: 12, // Default zoom level
+  });
 
-## Learn More
+  const handleMarkerClick = (message) => {
+    alert(message);
+  };
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+  return (
+    <div style={{ width: "100vw", height: "100vh" }}>
+      <div style={{ position: "absolute", zIndex: 1000, top: 10, left: 10 }}>
+        <button onClick={() => setMapType("google")}>Google Map</button>
+        <button onClick={() => setMapType("naver")}>Naver Map</button>
+        <button onClick={() => setMapType("kakao")}>Kakao Map</button>
+        <button onClick={() => setMapType("openLayer")}>OpenLayer Map</button>
+      </div>
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+      <MapContainer
+        mapType={mapType}
+        google="YOUR_GOOGLE_MAPS_API_KEY"
+        naver="YOUR_NAVER_MAPS_API_KEY"
+        kakao="YOUR_KAKAO_MAPS_API_KEY"
+        openLayer={true}
+        syncState={syncState}
+        setSyncState={setSyncState}>
+        {mapType === "google" && (
+          <GoogleMarker
+            position={{ lat: 37.5665, lng: 126.978 }}
+            onClick={() => handleMarkerClick("Google Marker clicked!")}>
+            <div
+              style={{
+                backgroundColor: "blue",
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+              }}
+            />
+          </GoogleMarker>
+        )}
+        {mapType === "naver" && (
+          <NaverMarker
+            position={{ lat: 37.5665, lng: 126.978 }}
+            onClick={() => handleMarkerClick("Naver Marker clicked!")}>
+            <div
+              style={{
+                backgroundColor: "green",
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+              }}
+            />
+          </NaverMarker>
+        )}
+        {mapType === "kakao" && (
+          <KakaoMarker
+            position={{ lat: 37.5665, lng: 126.978 }}
+            onClick={() => handleMarkerClick("Kakao Marker clicked!")}>
+            <div
+              style={{
+                backgroundColor: "yellow",
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+              }}
+            />
+          </KakaoMarker>
+        )}
+      </MapContainer>
+    </div>
+  );
+};
 
-### Code Splitting
+export default App;
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+Supported Maps and API Keys
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Google Maps
 
-### Making a Progressive Web App
+To use Google Maps, you need to generate an API key from Google Cloud Console.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Naver Maps
 
-### Advanced Configuration
+For Naver Maps, obtain an API key from the Naver Developers Portal.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Kakao Maps
 
-### Deployment
+For Kakao Maps, generate an API key from the Kakao Developers Portal.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+OpenLayers
 
-### `npm run build` fails to minify
+OpenLayers does not require an API key and can be used freely without additional setup. However, OpenLayers requires appropriate attribution for any map tiles used.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+License
+
+react_map_pallet is licensed under the BSD 2-Clause License.
+
+OpenLayers Licensing Notes
+
+## If you use OpenLayers, you must adhere to its BSD-style license. Additionally, map tile providers used with OpenLayers (such as OpenStreetMap) may have their own licensing requirements. Ensure that you include proper attribution when using such providers.
+
+Contributing
+
+We welcome contributions! Please follow these steps to contribute: 1. Fork the repository. 2. Create a new branch: git checkout -b feature/your-feature. 3. Commit your changes: git commit -m 'Add your feature'. 4. Push to the branch: git push origin feature/your-feature. 5. Submit a pull request.
+
+---
+
+Authors
+
+    •	Manwook Han (hanmw110@naver.com)
+
+---
+
+Acknowledgments
+
+## This library was created as part of a submission for the Open Source Development Competition. Special thanks to all contributors and testers for making this library possible.
+
+Known Issues
+
+    •	Some platform-specific map limitations may exist (e.g., marker customization).
+    •	Ensure API keys are valid and added correctly in your application.
+
+## For any issues or suggestions, please submit a GitHub issue.
+
+```
+This README file provides a comprehensive explanation of your package, including installation, usage, licensing, and contributing guidelines. Let me know if you'd like further adjustments!
+```
