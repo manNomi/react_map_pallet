@@ -2,9 +2,10 @@
 
 ## Description
 
-example for the openSource
--> live bus project for 511 in incheon
-http://www.mannomi.store
+Example for Open Source:
+• Live Bus Project for 511 in Incheon
+GitHub: BusLiveWeb[GitHub Repository](https://github.com/manNomi/BusLiveWeb)
+Website: mannomi.store[Website](http://www.mannomi.store)
 
 ![alt text](image.png)
 ![alt text](image-1.png)
